@@ -65,6 +65,8 @@ app.get('/countries', routes.getCountries);
 /* ---- Q3b (Best Genre) ---- */
 // app.get('/decades/:decade', routes.bestGenresPerDecade);
 
+app.get('/coronavirus/:country', routes.coronaDataPerCountry);
+
 
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);

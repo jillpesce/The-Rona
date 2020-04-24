@@ -113,17 +113,64 @@ var connection = mysql.createConnection({
 
 function getCountries(req, res) {
     var query = `
-        SELECT DISTINCT country FROM coronavirus LIMIT 5
+        SELECT DISTINCT country FROM coronavirus
     `;
     if (connection) {
         connection.query(query, function(err, rows, fields) {
             if (err) console.log(err);
             else {
+                //console.log(rows);
                 res.json(rows);
             }
         });
     }
 };
+
+function coronaDataPerCountry(req, res) {
+    console.log('coronaData api hit');
+    let inputCountry = req.query.country;
+    let query = `WITH countryT (confirmed, recovered, deaths, date_checked) AS
+            (
+                SELECT confirmed, recovered, deaths, date_checked
+                FROM coronavirus 
+                WHERE country = ${inputCountry}
+            ),
+            global(confirmed, recovered, deaths, date_checked) AS (
+            SELECT SUM(confirmed), SUM(recovered), SUM(deaths), date_checked
+            FROM coronavirus
+            GROUP BY date_checked)
+            SELECT c.date_checked, 
+            SUM (c.confirmed) OVER (ORDER BY c.date_checked) AS confirmed, 
+            SUM (c.recovered) OVER (ORDER BY c.date_checked) AS recovered, 
+            SUM (c.deaths) OVER (ORDER BY c.date_checked) AS deaths, 
+            SUM (g.confirmed) OVER (ORDER BY c.date_checked) AS confirmed_glob, 
+            SUM (g.recovered) OVER (ORDER BY c.date_checked) AS recovered_glob, 
+            SUM (g.deaths) OVER (ORDER BY c.date_checked) AS deaths_glob
+            FROM countryT c JOIN global g ON c.date_checked = g.date_checked;
+        
+    `;
+
+    var result = {
+        date : 4212020, 
+        confirmed: 14, 
+        recovered: 62, 
+        deaths: 5,
+        confirmed_globally: 1000, 
+        recovered_globally: 500, 
+        deaths_globally: 88
+    };
+
+    var results = [];
+    results.push(result);
+    res.json(results);
+
+    // connection.query(query, function(err, rows, fields) {
+    //     if (err) console.log(err);
+    //     else {
+    //     res.json(rows);
+    //     }
+    // });
+}
 
 /* ---- Q3 (Best Genres) ---- */
 // function bestGenresPerDecade(req, res) {
@@ -168,5 +215,6 @@ module.exports = {
     // getRecs: getRecs,
     // getDecades: getDecades,
     // bestGenresPerDecade: bestGenresPerDecade
+    coronaDataPerCountry: coronaDataPerCountry,
     getCountries: getCountries
 }
