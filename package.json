@@ -1,0 +1,23 @@
+{
+  "name": "cis450_project",
+  "version": "1.0.0",
+  "description": "CIS 450 project for Jill, Chloe, Selina, and Caroline",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/caromurp/CIS450_Project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/caromurp/CIS450_Project/issues"
+  },
+  "homepage": "https://github.com/caromurp/CIS450_Project#readme",
+  "dependencies": {
+    "concurrently": "^5.1.0",
+    "nodemon": "^2.0.3"
+  },
+  "scripts": {
+    "dev": "concurrently \"cd server && npm run start \" \"cd client && npm start\" "
+  }
+}

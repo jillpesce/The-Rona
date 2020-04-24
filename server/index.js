@@ -3,21 +3,14 @@ var mysql      = require('mysql');
 var bodyParser = require('body-parser');
 var cookieSession = require("cookie-session");
 var cookieParser = require("cookie-parser"); // parse cookie header
-const passportSetup = require("./passport-setup");
+var passportSetup = require("./passport-setup");
 var passport = require('passport');
 const keys = require("./keys");
 var cors = require('cors');
 var authRoutes =  require('./auth-routes');
 var config = require('./db-config.js');
 var app = express();
-
-// var connection = mysql.createConnection({
-//     host : config.host,
-//     port : '1512',
-//     user : config.user,
-//     password : config.password,
-//     database : config.database
-// });
+var routes = require('./routes');
 
 var connection = mysql.createConnection({
     host     : 'mysqldb.csugpczkhpw3.us-east-1.rds.amazonaws.com',
@@ -25,8 +18,8 @@ var connection = mysql.createConnection({
     user     : 'admin',
     password : 'GirlPower2020',
     database : 'mysqldb'
-
 });
+
 connection.connect(function(err){
     if(!err) {
         console.log("Database is connected ... ");    
@@ -35,45 +28,28 @@ connection.connect(function(err){
     }
 });
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: 'http://localhost:3000', 
+    methods: "GET, HEAD, PUT, PATCH, POST, DELETE"}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
+
 app.use(
     cookieSession({
         name: "session",
-        keys: [keys.cookieKey],
+        keys: [keys.session.cookieKey],
         maxAge: 24 * 60 * 60 * 100
     })
 );
-// set up routes
-app.use('/auth', authRoutes);
+
 // parse cookies
 app.use(cookieParser());
 // initalize passport
 app.use(passport.initialize());
 // deserialize cookie from the browser
 app.use(passport.session());
-  
-var authCheck = (req, res, next) => {
-    if(!req.user) {
-        // not logged in
-        res.redirect('/auth/login');
-    } else {
-        next();
-    }
-};
-  
-// if it's already login, send the profile response,
-// otherwise, send a 401 response that the user is not authenticated
-// authCheck before navigating to home page
-app.get("/", authCheck, (req, res) => {
-    res.status(200).json({
-        authenticated: true,
-        message: "user successfully authenticated",
-        user: req.user,
-        cookies: req.cookies
-    });
-});
+
+// set up routes
+app.use('/auth', authRoutes);
 
 /* ---------------------------------------------------------------- */
 /* ------------------- Route handler registration ----------------- */
