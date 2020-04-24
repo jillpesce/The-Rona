@@ -3,8 +3,17 @@ var mysql      = require('mysql');
 var bodyParser = require('body-parser');
 var routes = require("./routes.js");
 var cors = require('cors');
+var config = require('./db-config.js');
 // var authRoutes =  require('./auth-routes');
 var app = express();
+
+// var connection = mysql.createConnection({
+//     host : config.host,
+//     port : '1512',
+//     user : config.user,
+//     password : config.password,
+//     database : config.database
+// });
 
 var connection = mysql.createConnection({
     host     : 'mysqldb.csugpczkhpw3.us-east-1.rds.amazonaws.com',
@@ -49,6 +58,8 @@ app.use(bodyParser.urlencoded({extended: false}));
 
 /* ---- (Best Genre) ---- */
 // app.get('/decades', routes.getDecades);
+
+app.get('/countries', routes.getCountries);
 
 
 /* ---- Q3b (Best Genre) ---- */
