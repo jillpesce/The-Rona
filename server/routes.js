@@ -2,7 +2,25 @@ var config = require('./db-config.js');
 var mysql = require('mysql');
 
 config.connectionLimit = 10;
-var connection = mysql.createPool(config);
+//var connection = mysql.createPool(config);
+
+// var connection = mysql.createPool({
+//     host     : config.host,
+//     user     : config.user,
+//     password : config.password,
+//     database : config.database
+// });
+
+var connection = mysql.createConnection({
+    host     : 'mysqldb.csugpczkhpw3.us-east-1.rds.amazonaws.com',
+    port     : '1521',
+    user     : 'admin',
+    password : 'GirlPower2020',
+    database : 'mysqldb'
+
+});
+
+
 
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
@@ -93,6 +111,20 @@ var connection = mysql.createPool(config);
 //     });
 // };
 
+function getCountries(req, res) {
+    var query = `
+        SELECT DISTINCT country FROM coronavirus LIMIT 5
+    `;
+    if (connection) {
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else {
+                res.json(rows);
+            }
+        });
+    }
+};
+
 /* ---- Q3 (Best Genres) ---- */
 // function bestGenresPerDecade(req, res) {
 //     console.log("test here!!");
@@ -130,10 +162,11 @@ var connection = mysql.createPool(config);
 // };
   
 // The exported functions, which can be accessed in index.js.
-// module.exports = {
-//     getAllGenres: getAllGenres,
-//     getTopInGenre: getTopInGenre,
-//     getRecs: getRecs,
-//     getDecades: getDecades,
-//     bestGenresPerDecade: bestGenresPerDecade
-// }
+module.exports = {
+    // getAllGenres: getAllGenres,
+    // getTopInGenre: getTopInGenre,
+    // getRecs: getRecs,
+    // getDecades: getDecades,
+    // bestGenresPerDecade: bestGenresPerDecade
+    getCountries: getCountries
+}
