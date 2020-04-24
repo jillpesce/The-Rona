@@ -7,6 +7,7 @@ export default class CoronaVirusRow extends React.Component {
 	}
 
 	render() {
+		console.log(this.props);
 		return (
 			<div className="coronaResults">
 				<div className="date">{this.props.date}</div>

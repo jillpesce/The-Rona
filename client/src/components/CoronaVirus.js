@@ -68,11 +68,11 @@ export default class CoronaVirus extends React.Component {
 
 			let coronaDataDivs = coronaDataList.map((data, i) =>
                 //<BestGenreRow key={i} genre={genre.genre} rating={genre.avg_rating}/>
-                <CoronaVirusRow key={i} date={data.date} confirmed={data.confirmed}
+                <CoronaVirusRow key={i} date={data.date_checked} confirmed={data.confirmed}
                     recovered={data.recovered} deaths={data.deaths} 
-                    confirmed_globally={data.confirmed_globally}
-                    recovered_globally={data.recovered_globally}
-                    deaths_globally={data.deaths_globally}/>
+                    confirmed_globally={data.confirmed_glob}
+                    recovered_globally={data.recovered_glob}
+                    deaths_globally={data.deaths_glob}/>
 			);
 
 			this.setState({

@@ -128,13 +128,14 @@ function getCountries(req, res) {
 
 function coronaDataPerCountry(req, res) {
     console.log('coronaData api hit');
-    let inputCountry = req.query.country;
-    let query = `WITH countryT (confirmed, recovered, deaths, date_checked) AS
-            (
-                SELECT confirmed, recovered, deaths, date_checked
-                FROM coronavirus 
-                WHERE country = ${inputCountry}
-            ),
+    let inputCountry = req.params.country;
+    console.log(inputCountry);
+
+    let query = `
+        WITH country(confirmed, recovered, deaths, date_checked) AS (
+            SELECT confirmed, recovered, deaths, date_checked
+            FROM coronavirus 
+            WHERE country = ${inputCountry}),
             global(confirmed, recovered, deaths, date_checked) AS (
             SELECT SUM(confirmed), SUM(recovered), SUM(deaths), date_checked
             FROM coronavirus
@@ -146,30 +147,17 @@ function coronaDataPerCountry(req, res) {
             SUM (g.confirmed) OVER (ORDER BY c.date_checked) AS confirmed_glob, 
             SUM (g.recovered) OVER (ORDER BY c.date_checked) AS recovered_glob, 
             SUM (g.deaths) OVER (ORDER BY c.date_checked) AS deaths_glob
-            FROM countryT c JOIN global g ON c.date_checked = g.date_checked;
+            FROM country c JOIN global g ON c.date_checked = g.date_checked;
         
     `;
 
-    var result = {
-        date : 4212020, 
-        confirmed: 14, 
-        recovered: 62, 
-        deaths: 5,
-        confirmed_globally: 1000, 
-        recovered_globally: 500, 
-        deaths_globally: 88
-    };
-
-    var results = [];
-    results.push(result);
-    res.json(results);
-
-    // connection.query(query, function(err, rows, fields) {
-    //     if (err) console.log(err);
-    //     else {
-    //     res.json(rows);
-    //     }
-    // });
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            console.log(rows);
+            res.json(rows);
+        }
+    });
 }
 
 /* ---- Q3 (Best Genres) ---- */
