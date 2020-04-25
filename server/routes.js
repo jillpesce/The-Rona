@@ -58,7 +58,6 @@ function coronaDataPerCountry(req, res) {
     connection.query(query, function(err, rows, fields) {
         if (err) console.log(err);
         else {
-            console.log(rows);
             res.json(rows);
         }
     });
@@ -96,7 +95,6 @@ function timelineData(req, res) {
     let inputCountry = req.params.country;
     let inputCause1 = req.params.cause1;
     let inputCause2 = req.params.cause2;
-    console.log(inputCountry);
 
     let query = `
         WITH cause1(year, cause, num_deaths) AS (
@@ -117,7 +115,6 @@ function timelineData(req, res) {
     connection.query(query, function(err, rows, fields) {
         if (err) console.log(err);
         else {
-            console.log(rows);
             res.json(rows);
         }
     });
@@ -132,7 +129,6 @@ function getGlobalCauseYears(req, res) {
         connection.query(query, function(err, rows, fields) {
             if (err) console.log(err);
             else {
-                console.log(rows);
                 res.json(rows);
             }
         });

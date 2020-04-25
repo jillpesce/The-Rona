@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import CoronaVirus from './CoronaVirus';
 import GlobalCauses from './GlobalCauses'
 import NationalCauses from './NationalCauses'
+import '../style/PageNavbar.css';
 
 export default class PageNavbar extends React.Component {
 	constructor(props) {
@@ -39,10 +40,10 @@ export default class PageNavbar extends React.Component {
 			      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 			        <div className="navbar-nav">
 			        {/*this.state.navDivs*/}
-					<Link to={"/coronavirus"}>Coronavirus</Link>
-					<Link to={"/timeline"}>Timeline</Link>
-					<Link to={"/NationalCauses"}>National Causes</Link>
-					<Link to={"/GlobalCauses"}>Global Causes</Link>
+					<Link className="header-link" to={"/coronavirus"}>Coronavirus</Link>
+					<Link className="header-link" to={"/timeline"}>Timeline</Link>
+					<Link className="header-link" to={"/NationalCauses"}>National Causes</Link>
+					<Link className="header-link" to={"/GlobalCauses"}>Global Causes</Link>
 			        </div>
 			      </div>
 			    </nav>
