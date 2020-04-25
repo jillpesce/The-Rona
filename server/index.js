@@ -50,34 +50,21 @@ app.use(passport.session());
 
 // set up routes
 app.use('/auth', authRoutes);
+// app.use(bodyParser.urlencoded({extended: false}));
 
 /* ---------------------------------------------------------------- */
 /* ------------------- Route handler registration ----------------- */
 /* ---------------------------------------------------------------- */
 
-/* ---- (Dashboard) ---- */
-// The route localhost:8081/genres is registered to the function
-// routes.getAllGenres, specified in routes.js.
-// app.get('/genres', routes.getAllGenres);
+app.get('/cvcountries', routes.getCoronaVirusCountries);
 
+app.get('/gccountries', routes.getGlobalCausesCountries);
 
-/* ---- Q1b (Dashboard) ---- */
-// app.get('/genres/:genre', routes.getTopInGenre); // Hint: Replace () => {} with the appropriate route handler.
+app.get('/gccauses', routes.getGlobalCauses);
 
+app.get('/coronavirus/:country', routes.coronaDataPerCountry);
 
-/* ---- Q2 (Recommendations) ---- */
-// app.get('/recommendations/:title', routes.getRecs);
-
-
-/* ---- (Best Genre) ---- */
-// app.get('/decades', routes.getDecades);
-
-app.get('/countries', routes.getCountries);
-
-
-/* ---- Q3b (Best Genre) ---- */
-// app.get('/decades/:decade', routes.bestGenresPerDecade);
-
+app.get('/timeline/:country/:cause1/:cause2', routes.timelineData);
 
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);

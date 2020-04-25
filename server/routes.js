@@ -3,15 +3,6 @@ var mysql = require('mysql');
 
 config.connectionLimit = 10;
 
-var authCheck = (req, res, next) => {
-    if(!req.user) {
-        // not logged in
-        res.redirect('/auth/login');
-    } else {
-        next();
-    }
-};
-
 var connection = mysql.createConnection({
     host     : 'mysqldb.csugpczkhpw3.us-east-1.rds.amazonaws.com',
     port     : '1521',
@@ -25,10 +16,9 @@ var connection = mysql.createConnection({
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
 
-function getCountries(req, res) {
-    // authCheck();
+function getCoronaVirusCountries(req, res) {
     var query = `
-        SELECT DISTINCT country FROM coronavirus LIMIT 5
+        SELECT DISTINCT country FROM coronavirus
     `;
     if (connection) {
         connection.query(query, function(err, rows, fields) {
@@ -40,48 +30,104 @@ function getCountries(req, res) {
     }
 };
 
-/* ---- Q3 (Best Genres) ---- */
-// function bestGenresPerDecade(req, res) {
-//     console.log("test here!!");
-//     var inputDecade = req.params.decade;
-//     var query = `
-//         WITH all_genres AS (
-//         SELECT DISTINCT genre
-//         FROM Genres
-//         ), all_movies AS (
-//         SELECT id, (FLOOR(release_year/10)*10) as decade
-//         FROM Movies 
-//         WHERE (FLOOR(release_year/10)*10) = ${inputDecade}
-//         ), avg_ratings_per_genre AS (
-//         SELECT g.genre, AVG(m.rating) AS avg_rating
-//         FROM all_movies am JOIN Movies m ON m.id = am.id JOIN Genres g ON m.id = g.movie_id
-//         GROUP BY g.genre
-//         )
-//         (SELECT ag.genre, arpg.avg_rating
-//         FROM avg_ratings_per_genre arpg JOIN all_genres ag ON arpg.genre = ag.genre)
-//         UNION
-//         (SELECT ag1.genre, 0 AS avg_rating
-//         FROM all_genres ag1
-//         WHERE ag1.genre NOT IN (
-//         SELECT genre
-//         FROM avg_ratings_per_genre 
-//         ))
-//         ORDER BY avg_rating DESC, genre;
-//     `;
-//     connection.query(query, function(err, rows, fields) {
-//         if (err) console.log(err);
-//         else {
-//         res.json(rows);
-//         }
-//     });
-// };
+function coronaDataPerCountry(req, res) {
+    console.log('coronaData api hit');
+    let inputCountry = req.params.country;
+    console.log(inputCountry);
+
+    let query = `
+        WITH country(confirmed, recovered, deaths, date_checked) AS (
+            SELECT confirmed, recovered, deaths, date_checked
+            FROM coronavirus 
+            WHERE country = ${inputCountry}),
+            global(confirmed, recovered, deaths, date_checked) AS (
+            SELECT SUM(confirmed), SUM(recovered), SUM(deaths), date_checked
+            FROM coronavirus
+            GROUP BY date_checked)
+            SELECT c.date_checked, 
+            SUM (c.confirmed) OVER (ORDER BY c.date_checked) AS confirmed, 
+            SUM (c.recovered) OVER (ORDER BY c.date_checked) AS recovered, 
+            SUM (c.deaths) OVER (ORDER BY c.date_checked) AS deaths, 
+            SUM (g.confirmed) OVER (ORDER BY c.date_checked) AS confirmed_glob, 
+            SUM (g.recovered) OVER (ORDER BY c.date_checked) AS recovered_glob, 
+            SUM (g.deaths) OVER (ORDER BY c.date_checked) AS deaths_glob
+            FROM country c JOIN global g ON c.date_checked = g.date_checked;
+        
+    `;
+
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            console.log(rows);
+            res.json(rows);
+        }
+    });
+}
+
+function getGlobalCausesCountries(req, res) {
+    var query = `
+        SELECT DISTINCT country FROM cause_of_death_globally
+    `;
+    if (connection) {
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else {
+                res.json(rows);
+            }
+        });
+    }
+};
+function getGlobalCauses(req, res) {
+    var query = `
+        SELECT DISTINCT cause FROM cause_of_death_globally
+    `;
+    if (connection) {
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else {
+                res.json(rows);
+            }
+        });
+    }
+};
+
+function timelineData(req, res) {
+    console.log('timelineData api hit');
+    let inputCountry = req.params.country;
+    let inputCause1 = req.params.cause1;
+    let inputCause2 = req.params.cause2;
+    console.log(inputCountry);
+
+    let query = `
+        WITH cause1(year, cause, num_deaths) AS (
+            SELECT year, cause, num_deaths
+            FROM cause_of_death_globally
+            WHERE country = "${inputCountry}"
+            AND cause = "${inputCause1}"),
+            cause2(year, cause, num_deaths) AS (
+            SELECT year, cause, num_deaths
+            FROM cause_of_death_globally
+            WHERE country = "${inputCountry}"
+            AND cause = "${inputCause2}")
+            SELECT c1.year AS year, c1.num_deaths AS deaths_cause1, c2.num_deaths AS deaths_cause2
+            FROM cause1 c1 JOIN cause2 c2 ON c1.year = c2.year
+            ORDER BY c1.year;
+    `;
+
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            console.log(rows);
+            res.json(rows);
+        }
+    });
+}
   
 // The exported functions, which can be accessed in index.js.
 module.exports = {
-    // getAllGenres: getAllGenres,
-    // getTopInGenre: getTopInGenre,
-    // getRecs: getRecs,
-    // getDecades: getDecades,
-    // bestGenresPerDecade: bestGenresPerDecade
-    getCountries: getCountries
+    coronaDataPerCountry: coronaDataPerCountry,
+    getCoronaVirusCountries: getCoronaVirusCountries,
+    getGlobalCausesCountries: getGlobalCausesCountries,
+    timelineData: timelineData,
+    getGlobalCauses: getGlobalCauses
 }

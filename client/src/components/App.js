@@ -4,12 +4,11 @@ import {
 	Route,
 	Switch
 } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import Recommendations from './Recommendations';
-import BestGenres from './BestGenres';
 import CoronaVirus from './CoronaVirus';
 import queryString from "query-string";
 import PrivateRoute from './PrivateRoute';
+import Timeline from './Timeline'
+import Dashboard from './Dashboard'
 
 const App = () => {
 	const [isAuthenticated, setAuthenticated] = useState(false);
@@ -54,13 +53,6 @@ const App = () => {
 						isAuthenticated = {isAuthenticated}
 						setAuthenticated = {setAuthenticated}
 					/>
-					<Route
-						exact
-						path="/dashboard"
-						render={() => (
-							<Dashboard />
-						)}
-					/>
 					<PrivateRoute
 						isAuthenticated={isAuthenticated}
 						exact
@@ -68,6 +60,14 @@ const App = () => {
 						component={
 							CoronaVirus
 						}
+					/>
+					<PrivateRoute
+						isAuthenticated={isAuthenticated}
+						exact
+						path="/timeline"
+						render={() => (
+							<Timeline />
+						)}
 					/>
 				</Switch>
 			</Router>
