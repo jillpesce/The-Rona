@@ -20,7 +20,7 @@ export default class CoronaVirus extends React.Component {
 	}
     
     componentDidMount() {
-        fetch("http://localhost:8081/countries", 
+        fetch("http://localhost:8081/cvcountries", 
         {
             method: 'GET'
         }).then(res => {

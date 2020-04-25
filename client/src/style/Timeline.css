@@ -1,0 +1,16 @@
+.timelinedata-container {
+    display: flex;
+    flex-flow: column wrap;
+    margin-top: 10px;
+  }
+
+.timelinedata-container .timelinedata-header, .results-container .timelineResults {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 40px;
+  }
+
+.header, .timelineResults .year, .timelineResults .deaths_cause1, .timelineResults .deaths_cause2 {
+    flex: 1 0 15%;
+  }

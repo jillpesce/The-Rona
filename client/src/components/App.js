@@ -4,10 +4,8 @@ import {
 	Route,
 	Switch
 } from 'react-router-dom';
-import Dashboard from './Dashboard';
-import Recommendations from './Recommendations';
-import BestGenres from './BestGenres';
 import CoronaVirus from './CoronaVirus';
+import Timeline from './Timeline'
 
 export default class App extends React.Component {
 
@@ -20,14 +18,7 @@ export default class App extends React.Component {
 							exact
 							path="/"
 							render={() => (
-								<Dashboard />
-							)}
-						/>
-						<Route
-							exact
-							path="/dashboard"
-							render={() => (
-								<Dashboard />
+								<CoronaVirus />
 							)}
 						/>
 						<Route
@@ -35,6 +26,13 @@ export default class App extends React.Component {
 							path="/coronavirus"
 							render={() => (
 								<CoronaVirus />
+							)}
+						/>
+						<Route
+							exact
+							path="/timeline"
+							render={() => (
+								<Timeline />
 							)}
 						/>
 					</Switch>
