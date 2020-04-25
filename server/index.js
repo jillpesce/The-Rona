@@ -41,7 +41,11 @@ app.get('/gccauses', routes.getGlobalCauses);
 
 app.get('/gyears', routes.getGlobalCauseYears);
 
+app.get('/nyears', routes.getNationalCauseYears);
+
 app.get('/globalcauses/:year', routes.getTopGlobalCauses);
+
+app.get('/nationalcauses/:year', routes.getTopNationalCauses);
 
 app.get('/coronavirus/:country', routes.coronaDataPerCountry);
 

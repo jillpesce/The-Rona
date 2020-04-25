@@ -7,6 +7,7 @@ import {
 import CoronaVirus from './CoronaVirus';
 import Timeline from './Timeline'
 import GlobalCauses from './GlobalCauses'
+import NationalCauses from './NationalCauses'
 
 export default class App extends React.Component {
 
@@ -41,6 +42,14 @@ export default class App extends React.Component {
 							path="/GlobalCauses"
 							render={() => (
 								<GlobalCauses />
+							)}
+						/>
+
+<Route
+							exact
+							path="/NationalCauses"
+							render={() => (
+								<NationalCauses />
 							)}
 						/>
 					</Switch>
