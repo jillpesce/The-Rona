@@ -1,11 +1,16 @@
 var express    = require("express");
 var mysql      = require('mysql');
 var bodyParser = require('body-parser');
-var routes = require("./routes.js");
+var cookieSession = require("cookie-session");
+var cookieParser = require("cookie-parser"); // parse cookie header
+var passportSetup = require("./passport-setup");
+var passport = require('passport');
+const keys = require("./keys");
 var cors = require('cors');
+var authRoutes =  require('./auth-routes');
 var config = require('./db-config.js');
 var app = express();
-
+var routes = require('./routes');
 
 var connection = mysql.createConnection({
     host     : 'mysqldb.csugpczkhpw3.us-east-1.rds.amazonaws.com',
@@ -13,7 +18,6 @@ var connection = mysql.createConnection({
     user     : 'admin',
     password : 'GirlPower2020',
     database : 'mysqldb'
-
 });
 
 connection.connect(function(err){
@@ -24,10 +28,29 @@ connection.connect(function(err){
     }
 });
 
-app.use(cors({credentials: true, origin: 'http://localhost:3000'}));
+app.use(cors({credentials: true, origin: 'http://localhost:3000', 
+    methods: "GET, HEAD, PUT, PATCH, POST, DELETE"}));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({extended: true}));
 
+app.use(
+    cookieSession({
+        name: "session",
+        keys: [keys.session.cookieKey],
+        maxAge: 24 * 60 * 60 * 100
+    })
+);
+
+// parse cookies
+app.use(cookieParser());
+// initalize passport
+app.use(passport.initialize());
+// deserialize cookie from the browser
+app.use(passport.session());
+
+// set up routes
+app.use('/auth', authRoutes);
+// app.use(bodyParser.urlencoded({extended: false}));
 
 /* ---------------------------------------------------------------- */
 /* ------------------- Route handler registration ----------------- */

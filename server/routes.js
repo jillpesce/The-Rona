@@ -12,12 +12,9 @@ var connection = mysql.createConnection({
 
 });
 
-
-
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
-
 
 function getCoronaVirusCountries(req, res) {
     var query = `

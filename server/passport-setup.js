@@ -1,18 +1,32 @@
-// const passport = require('passport');
-// const GoogleStrategy = require('passport-google-oauth20');
-// const keys = require('./keys');
+const passport = require('passport');
+const GoogleStrategy = require('passport-google-oauth20');
+const keys = require('./keys');
 
-// passport.serializeUser((user, done) => {
-//     //done(null, user.id)
-//     done(null, null);
-// });
+passport.serializeUser((user, done) => {
+    done(null, user);
+});
 
-// passport.deserializeUser((id, done) => {
-//     // User.findById(id).then((user) => {
-//     //     done(null, user);
-//     // });
-//     done(null, null);
-// });
+passport.deserializeUser((user, done) => {
+    // User.findById(id).then((user) => {
+    //     done(null, user);
+    // });
+    done(null, user);
+});
+
+passport.use(
+    new GoogleStrategy({
+        clientID: keys.google.clientID,
+        clientSecret: keys.google.clientSecret,
+        callbackURL: '/auth/google/callback'
+    }, function(accessToken, refreshToken, profile, done) {
+        var userData = {
+            email: profile.emails[0].value,
+            name: profile.displayName,
+            token: accessToken
+        };
+        done(null, userData);
+    })
+);
 
 // passport.use(
 //     new GoogleStrategy({
