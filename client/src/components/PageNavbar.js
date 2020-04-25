@@ -38,7 +38,7 @@ export default class PageNavbar extends React.Component {
 			        <div className="navbar-nav">
 			        {/*this.state.navDivs*/}
 					<Link to={"/coronavirus"}>RONI</Link>
-					
+					<Link to={"/timeline"}>timeline</Link>
 					
 			        </div>
 			      </div>

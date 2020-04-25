@@ -47,9 +47,9 @@ const App = () => {
 					<Route
 						exact
 						path="/"
-						render={() => (
-							<Dashboard />
-						)}
+						component={
+							Dashboard
+						}
 						isAuthenticated = {isAuthenticated}
 						setAuthenticated = {setAuthenticated}
 					/>
@@ -65,9 +65,9 @@ const App = () => {
 						isAuthenticated={isAuthenticated}
 						exact
 						path="/timeline"
-						render={() => (
-							<Timeline />
-						)}
+						component={ 
+							Timeline
+						}
 					/>
 				</Switch>
 			</Router>
