@@ -122,6 +122,78 @@ function timelineData(req, res) {
         }
     });
 }
+
+function getGlobalCauseYears(req, res) {
+    console.log("getting years")
+    var query = `
+        SELECT DISTINCT year FROM cause_of_death_globally
+    `;
+    if (connection) {
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else {
+                console.log(rows);
+                res.json(rows);
+            }
+        });
+    }
+};
+
+function getTopGlobalCauses(req, res) {
+    let year = req.params.year;
+    var query = `
+        SELECT cause, SUM(num_deaths) as num_deaths
+        FROM cause_of_death_globally
+        WHERE year = "${year}"
+        AND num_deaths IS NOT NULL
+        GROUP BY (cause)
+        ORDER BY SUM(num_deaths) DESC    
+    `;
+    if (connection) {
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else {
+                res.json(rows);
+            }
+        });
+    }
+};
+
+function getNationalCauseYears(req, res) {
+    console.log("getting national years")
+    var query = `
+        SELECT DISTINCT year FROM cause_of_death_nationally
+    `;
+    if (connection) {
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else {
+                console.log(rows);
+                res.json(rows);
+            }
+        });
+    }
+};
+
+function getTopNationalCauses(req, res) {
+    let year = req.params.year;
+    var query = `
+        SELECT cause, SUM(num_deaths) as num_deaths
+        FROM cause_of_death_nationally
+        WHERE year = "${year}"
+        AND num_deaths IS NOT NULL
+        GROUP BY (cause)
+        ORDER BY SUM(num_deaths) DESC    
+    `;
+    if (connection) {
+        connection.query(query, function(err, rows, fields) {
+            if (err) console.log(err);
+            else {
+                res.json(rows);
+            }
+        });
+    }
+};
   
 // The exported functions, which can be accessed in index.js.
 module.exports = {
@@ -129,5 +201,9 @@ module.exports = {
     getCoronaVirusCountries: getCoronaVirusCountries,
     getGlobalCausesCountries: getGlobalCausesCountries,
     timelineData: timelineData,
-    getGlobalCauses: getGlobalCauses
+    getGlobalCauses: getGlobalCauses,
+    getGlobalCauseYears: getGlobalCauseYears,
+    getTopGlobalCauses: getTopGlobalCauses,
+    getNationalCauseYears: getNationalCauseYears,
+    getTopNationalCauses: getTopNationalCauses,
 }

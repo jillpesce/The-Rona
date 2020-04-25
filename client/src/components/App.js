@@ -9,10 +9,11 @@ import queryString from "query-string";
 import PrivateRoute from './PrivateRoute';
 import Timeline from './Timeline'
 import Dashboard from './Dashboard'
+import GlobalCauses from './GlobalCauses'
+import NationalCauses from './NationalCauses'
 
 const App = () => {
 	const [isAuthenticated, setAuthenticated] = useState(false);
-
 	useEffect(async () => {
 		try {
 			const res = await fetch('http://localhost:8081/auth/login/success', {
@@ -67,6 +68,23 @@ const App = () => {
 						path="/timeline"
 						component={ 
 							Timeline
+						}
+					/>
+    
+          <PrivateRoute
+						isAuthenticated={isAuthenticated}
+						exact
+						path="/GlobalCauses"
+						render={
+							GlobalCauses
+						}
+					/>
+					<PrivateRoute
+						isAuthenticated={isAuthenticated}
+						exact
+						path="/NationalCauses"
+						render={
+							NationalCauses
 						}
 					/>
 				</Switch>
