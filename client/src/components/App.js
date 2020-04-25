@@ -6,6 +6,7 @@ import {
 } from 'react-router-dom';
 import CoronaVirus from './CoronaVirus';
 import Timeline from './Timeline'
+import GlobalCauses from './GlobalCauses'
 
 export default class App extends React.Component {
 
@@ -33,6 +34,13 @@ export default class App extends React.Component {
 							path="/timeline"
 							render={() => (
 								<Timeline />
+							)}
+						/>
+						<Route
+							exact
+							path="/GlobalCauses"
+							render={() => (
+								<GlobalCauses />
 							)}
 						/>
 					</Switch>
