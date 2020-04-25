@@ -70,12 +70,11 @@ const App = () => {
 							Timeline
 						}
 					/>
-    
-          <PrivateRoute
+          			<PrivateRoute
 						isAuthenticated={isAuthenticated}
 						exact
 						path="/GlobalCauses"
-						render={
+						component={
 							GlobalCauses
 						}
 					/>
@@ -83,7 +82,7 @@ const App = () => {
 						isAuthenticated={isAuthenticated}
 						exact
 						path="/NationalCauses"
-						render={
+						component={
 							NationalCauses
 						}
 					/>

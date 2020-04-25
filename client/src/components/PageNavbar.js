@@ -2,6 +2,8 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import CoronaVirus from './CoronaVirus';
+import GlobalCauses from './GlobalCauses'
+import NationalCauses from './NationalCauses'
 
 export default class PageNavbar extends React.Component {
 	constructor(props) {
@@ -37,9 +39,10 @@ export default class PageNavbar extends React.Component {
 			      <div className="collapse navbar-collapse" id="navbarNavAltMarkup">
 			        <div className="navbar-nav">
 			        {/*this.state.navDivs*/}
-					<Link to={"/coronavirus"}>RONI</Link>
-					<Link to={"/timeline"}>timeline</Link>
-					
+					<Link to={"/coronavirus"}>Coronavirus</Link>
+					<Link to={"/timeline"}>Timeline</Link>
+					<Link to={"/NationalCauses"}>National Causes</Link>
+					<Link to={"/GlobalCauses"}>Global Causes</Link>
 			        </div>
 			      </div>
 			    </nav>
