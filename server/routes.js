@@ -45,13 +45,13 @@ function coronaDataPerCountry(req, res) {
             FROM coronavirus
             GROUP BY date_checked)
             SELECT c.date_checked, 
-            SUM (c.confirmed) OVER (ORDER BY c.date_checked) AS confirmed, 
-            SUM (c.recovered) OVER (ORDER BY c.date_checked) AS recovered, 
-            SUM (c.deaths) OVER (ORDER BY c.date_checked) AS deaths, 
-            SUM (g.confirmed) OVER (ORDER BY c.date_checked) AS confirmed_glob, 
-            SUM (g.recovered) OVER (ORDER BY c.date_checked) AS recovered_glob, 
-            SUM (g.deaths) OVER (ORDER BY c.date_checked) AS deaths_glob
-            FROM country c JOIN global g ON c.date_checked = g.date_checked;
+            SUM (c.confirmed) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS confirmed, 
+            SUM (c.recovered) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS recovered, 
+            SUM (c.deaths) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS deaths, 
+            SUM (g.confirmed) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS confirmed_glob, 
+            SUM (g.recovered) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS recovered_glob, 
+            SUM (g.deaths) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS deaths_glob
+            FROM country c JOIN global g ON c.date_checked = g.date_checked ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y');
         
     `;
 
