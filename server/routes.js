@@ -16,6 +16,7 @@ var connection = mysql.createConnection({
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
 
+/* --------------------CoronaVirus Page Queries -------------------- */
 function getCoronaVirusCountries(req, res) {
     var query = `
         SELECT DISTINCT country FROM coronavirus
@@ -45,14 +46,65 @@ function coronaDataPerCountry(req, res) {
             FROM coronavirus
             GROUP BY date_checked)
             SELECT c.date_checked, 
-            SUM (c.confirmed) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS confirmed, 
-            SUM (c.recovered) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS recovered, 
-            SUM (c.deaths) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS deaths, 
-            SUM (g.confirmed) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS confirmed_glob, 
-            SUM (g.recovered) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS recovered_glob, 
-            SUM (g.deaths) OVER (ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y')) AS deaths_glob
+            c.confirmed AS confirmed, 
+            c.recovered AS recovered, 
+            c.deaths AS deaths, 
+            g.confirmed AS confirmed_glob, 
+            g.recovered AS recovered_glob, 
+            g.deaths AS deaths_glob
             FROM country c JOIN global g ON c.date_checked = g.date_checked ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y');
-        
+    `;
+
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            res.json(rows);
+        }
+    });
+}
+
+function getMostRecentGlobalStatistics(req, res) {
+    let query = `
+        SELECT SUM(confirmed) AS confirmed, SUM(recovered) AS recovered, SUM(deaths) AS deaths, date_checked
+        FROM coronavirus
+        GROUP BY date_checked
+        ORDER BY STR_TO_DATE(date_checked, '%m/%d/%y') DESC LIMIT 1;
+    `;
+    // let query = 'SELECT * FROM coronavirus;';
+
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            res.json(rows);
+        }
+    });
+}
+
+function getCoronaVsOtherCauses(req, res) {
+    let inputCountry = req.params.country;
+    console.log(inputCountry);
+
+    let query = `
+        WITH TotalCorona AS (
+            SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, c.deaths as num
+            FROM coronavirus c 
+            WHERE c.country = ${inputCountry}
+            ORDER BY STR_TO_DATE(c.date_checked, '%m/%d/%y') DESC LIMIT 1),
+        CauseByPopulation AS (
+            SELECT c.country, c.cause, c.num_deaths as num
+            FROM cause_of_death_globally c
+            WHERE c.year = '2017'
+            AND c.country = ${inputCountry}
+            AND c.num_deaths IS NOT NULL)
+            SELECT * 
+            FROM
+                (SELECT *
+                FROM TotalCorona
+                    UNION
+                SELECT *
+                FROM CauseByPopulation) X
+            WHERE num<>0
+            ORDER BY num DESC;
     `;
 
     connection.query(query, function(err, rows, fields) {
@@ -76,6 +128,7 @@ function getGlobalCausesCountries(req, res) {
         });
     }
 };
+
 function getGlobalCauses(req, res) {
     var query = `
         SELECT DISTINCT cause FROM cause_of_death_globally
@@ -195,6 +248,8 @@ function getTopNationalCauses(req, res) {
 module.exports = {
     coronaDataPerCountry: coronaDataPerCountry,
     getCoronaVirusCountries: getCoronaVirusCountries,
+    getMostRecentGlobalStatistics: getMostRecentGlobalStatistics,
+    getCoronaVsOtherCauses: getCoronaVsOtherCauses,
     getGlobalCausesCountries: getGlobalCausesCountries,
     timelineData: timelineData,
     getGlobalCauses: getGlobalCauses,
