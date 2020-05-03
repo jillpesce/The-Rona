@@ -7,7 +7,6 @@ export default class TimelineRow extends React.Component {
 	}
 
 	render() {
-		console.log(this.props);
 		return (
 			<div className="timelineResults">
 				<div className="year">{this.props.year}</div>

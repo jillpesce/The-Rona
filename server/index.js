@@ -76,7 +76,11 @@ app.get('/globalcauses/:year', routes.getTopGlobalCauses);
 
 app.get('/nationalcauses/:year', routes.getTopNationalCauses);
 
-app.get('/timeline/:country/:cause1/:cause2', routes.timelineData);
+app.get('/timeline/:country/:cause1/:cause2', routes.getTimelineData);
+
+app.get('/timeline/:country/:cause1', routes.getTimelinePeaks);
+
+app.get('/timeline/average/:country/:cause1/:cause2', routes.getAvgNumDeaths);
 
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);

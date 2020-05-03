@@ -143,7 +143,7 @@ function getGlobalCauses(req, res) {
     }
 };
 
-function timelineData(req, res) {
+function getTimelineData(req, res) {
     console.log('timelineData api hit');
     let inputCountry = req.params.country;
     let inputCause1 = req.params.cause1;
@@ -165,6 +165,76 @@ function timelineData(req, res) {
             ORDER BY c1.year;
     `;
 
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            res.json(rows);
+        }
+    });
+}
+
+function getTimelinePeaks(req, res) {
+    let inputCountry = req.params.country;
+    let inputCause = req.params.cause;
+    let query = `SELECT DISTINCT c1.year AS year
+    FROM cause_of_death_globally c1
+    WHERE (c1.cause = "${inputCause}"
+        AND c1.country = "${inputCountry}"
+        AND (c1.num_deaths > 500 + 
+            (SELECT num_deaths 
+            FROM cause_of_death_globally c2
+            WHERE c2.year = c1.year - 1
+            AND c2.cause = "${inputCause}"
+            AND c2.country = "${inputCountry}"))
+        OR  (c1.num_deaths + 500 < 
+            (SELECT c2.num_deaths 
+            FROM cause_of_death_globally c2
+            WHERE c2.year = c1.year - 1
+            AND c2.cause = "${inputCause}"
+            AND c2.country = "${inputCountry}")))
+    AND (c1.cause = "${inputCause}"
+        AND c1.country = "${inputCountry}"
+        AND (c1.num_deaths > 500 + 
+            (SELECT num_deaths 
+            FROM cause_of_death_globally c2
+            WHERE c2.year = c1.year + 1
+            AND c2.cause = "${inputCause}"
+            AND c2.country = "${inputCountry}"))
+        OR (c1.num_deaths + 500 < 
+            (SELECT c2.num_deaths 
+            FROM cause_of_death_globally c2
+            WHERE c2.year = c1.year + 1
+            AND c2.cause = "${inputCause}"
+            AND c2.country = "${inputCountry}")))
+    ORDER BY c1.year;
+    `;
+    connection.query(query, function(err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            res.json(rows);
+        }
+    });
+}
+
+function getAvgNumDeaths(req, res) {
+    let inputCountry = req.params.country;
+    let inputCause1 = req.params.cause1;
+    let inputCause2 = req.params.cause2;
+    let query = `WITH cause1(cause, num_deaths) AS (
+        SELECT cause, AVG(num_deaths)
+        FROM cause_of_death_globally
+        WHERE country = "${inputCountry}"
+        AND cause = "${inputCause1}"
+        GROUP BY cause),
+        cause2(cause, num_deaths) AS (
+        SELECT cause, AVG(num_deaths)
+        FROM cause_of_death_globally
+        WHERE country = "${inputCountry}"
+        AND cause = "${inputCause2}"
+        GROUP BY cause)
+        SELECT c1.num_deaths AS avg1, c2.num_deaths AS avg2
+        FROM cause1 c1, cause2 c2;
+        `;
     connection.query(query, function(err, rows, fields) {
         if (err) console.log(err);
         else {
@@ -251,7 +321,9 @@ module.exports = {
     getMostRecentGlobalStatistics: getMostRecentGlobalStatistics,
     getCoronaVsOtherCauses: getCoronaVsOtherCauses,
     getGlobalCausesCountries: getGlobalCausesCountries,
-    timelineData: timelineData,
+    getTimelineData: getTimelineData,
+    getTimelinePeaks: getTimelinePeaks,
+    getAvgNumDeaths: getAvgNumDeaths,
     getGlobalCauses: getGlobalCauses,
     getGlobalCauseYears: getGlobalCauseYears,
     getTopGlobalCauses: getTopGlobalCauses,
