@@ -23,11 +23,14 @@ export default class Timeline extends React.Component {
 			isSubmitted: false,
 			cause1Avg: 0,
 			cause2Avg: 0,
+			stdev1: 0,
+			stdev2: 0,
+			population: 0,
 			countries: [],
 			causes: [],
 			data: [],
 			labels: [],
-			peakYears: []
+
 		};
 
 		this.submit = this.submit.bind(this);
@@ -145,8 +148,8 @@ export default class Timeline extends React.Component {
 						backgroundColor: (context) => {
 							let index = context.dataIndex;
 							let value = context.dataset.data[index];
-							return value > this.state.cause1Avg * 2 ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
-							value < this.state.cause1Avg / 2 ? 'rgba(255,0,0,0.5)' :  
+							return value > (this.state.cause1Avg + this.state.stdev1 * 2) ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
+							value < (this.state.cause1Avg - this.state.stdev1 * 2) ? 'rgba(255,0,0,0.5)' :  
 							'rgba(0,0,255,0.5)';},
 						borderColor: 'rgba(0,0,255,0.5)',
 						borderWidth: 1,
@@ -160,8 +163,8 @@ export default class Timeline extends React.Component {
 						backgroundColor: (context) => {
 							let index = context.dataIndex;
 							let value = context.dataset.data[index];
-							return value > this.state.cause2Avg * 2 ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
-							value < this.state.cause2Avg / 2 ? 'rgba(255,0,0,0.5)' :  
+							return value > (this.state.cause2Avg + this.state.stdev2 * 2) ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
+							value < (this.state.cause2Avg - this.state.stdev2 * 2) ? 'rgba(255,0,0,0.5)' :  
 							'rgba(0,255,0,0.5)';},
 						borderColor: 'rgba(0,255,0,0.5)',
 						borderWidth: 1,
@@ -174,27 +177,27 @@ export default class Timeline extends React.Component {
 			console.log(err);
 		});
 		//get peak years 
-		fetch(`http://localhost:8081/timeline/${encodeURIComponent(this.state.selectedCountry)}
-		/${encodeURIComponent(this.state.selectedCause1)}`, {
-			method: 'GET',
-		}).then(res => {
-			return res.json();
-		}, err => {
-			console.log(err);
-		}).then(timelinePeakList => {
-			if (!timelinePeakList) return;
+		// fetch(`http://localhost:8081/timeline/${encodeURIComponent(this.state.selectedCountry)}
+		// /${encodeURIComponent(this.state.selectedCause1)}`, {
+		// 	method: 'GET',
+		// }).then(res => {
+		// 	return res.json();
+		// }, err => {
+		// 	console.log(err);
+		// }).then(timelinePeakList => {
+		// 	if (!timelinePeakList) return;
 
-			let years = [];
+		// 	let years = [];
 
-			timelinePeakList.forEach(elem => {
-				years.push(elem.year);
-			})
-			this.setState({
-				peakYears: years
-			});
-		}, err => {
-			console.log(err);
-		});
+		// 	timelinePeakList.forEach(elem => {
+		// 		years.push(elem.year);
+		// 	})
+		// 	this.setState({
+		// 		peakYears: years
+		// 	});
+		// }, err => {
+		// 	console.log(err);
+		// });
 		//get avg num deaths
 		fetch(`http://localhost:8081/timeline/average/${encodeURIComponent(this.state.selectedCountry)}
 		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
@@ -207,10 +210,28 @@ export default class Timeline extends React.Component {
 			if (!timelineAvg) return;
 
 			this.setState({
-				cause1Avg: Math.round(timelineAvg[0].avg1),
-				cause2Avg: Math.round(timelineAvg[0].avg2)
+				cause1Avg: Math.round(timelineAvg[0].avg1).toLocaleString(),
+				cause2Avg: Math.round(timelineAvg[0].avg2).toLocaleString(),
+				stdev1: timelineAvg[0].stdev1,
+				stdev2: timelineAvg[0].stdev2
 			});
+			console.log(this.chartReference);
 
+		}, err => {
+			console.log(err);
+		});
+		fetch(`http://localhost:8081/timeline/population/${encodeURIComponent(this.state.selectedCountry)}`, {
+			method: 'GET',
+		}).then(res => {
+			return res.json();
+		}, err => {
+			console.log(err);
+		}).then(timelinePop => {
+			if (!timelinePop) return;
+
+			this.setState({
+				population: timelinePop[0].population
+			});
 			console.log(this.chartReference);
 
 		}, err => {
@@ -241,6 +262,10 @@ export default class Timeline extends React.Component {
 									{this.state.causes}
 								</select>
 								<button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
+								<br/>
+								<br/>
+								<span>Results from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+
 							</div>
 						</div>
 					</div>
@@ -255,6 +280,10 @@ export default class Timeline extends React.Component {
 										{this.state.cause1Avg}
 									</div>
 									<p className="stat">Average Deaths By {this.state.submittedCause1}</p>
+								</div>
+								<div className="pop-stat">
+									<div className="stat-val-pop">{this.state.population.toLocaleString()}</div>
+									<p className="stat">Total Population</p>
 								</div>
 								<div className="cause2-stat">
 									<div className="stat-val-cause2">{this.state.cause2Avg}</div>
@@ -289,6 +318,9 @@ export default class Timeline extends React.Component {
 						)}
 
 					</div>
+					<br/>
+					<br/>
+					{this.state.isSubmitted && (
 					<div className="jumbotron">
 						<div className="timelinedata-container">
 							<div className="timelinedata-header">
@@ -300,8 +332,9 @@ export default class Timeline extends React.Component {
 								{this.state.data}
 							</div>
 						</div>
-					</div>
+					</div>)}
 				</div>
+				
 			</div>
 		);
 	}
