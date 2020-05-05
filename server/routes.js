@@ -299,10 +299,9 @@ function getTopNationalCauses(req, res) {
     var query = `
         SELECT cause, SUM(num_deaths) as num_deaths
         FROM cause_of_death_nationally
-        WHERE year = "${year}"
+        WHERE year = "${year}" AND cause <> "All causes"
         AND num_deaths IS NOT NULL
         GROUP BY (cause)
-        ORDER BY SUM(num_deaths) DESC    
     `;
     if (connection) {
         connection.query(query, function(err, rows, fields) {
@@ -313,6 +312,8 @@ function getTopNationalCauses(req, res) {
         });
     }
 };
+
+//         ORDER BY SUM(num_deaths) DESC  
   
 // The exported functions, which can be accessed in index.js.
 module.exports = {
