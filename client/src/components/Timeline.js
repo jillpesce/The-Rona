@@ -6,7 +6,6 @@ import '../style/Timeline.css';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Line } from 'react-chartjs-2';
-import { green } from 'color-name';
 
 
 export default class Timeline extends React.Component {
@@ -143,18 +142,30 @@ export default class Timeline extends React.Component {
 						label: `${this.state.selectedCause1}`,
 						fill: false,
 						lineTension: 0.5,
-						backgroundColor: 'rgba(0,0,255,0.5)',
+						backgroundColor: (context) => {
+							let index = context.dataIndex;
+							let value = context.dataset.data[index];
+							return value > this.state.cause1Avg * 2 ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
+							value < this.state.cause1Avg / 2 ? 'rgba(255,0,0,0.5)' :  
+							'rgba(0,0,255,0.5)';},
 						borderColor: 'rgba(0,0,255,0.5)',
-						borderWidth: 2,
+						borderWidth: 1,
+						radius: 4,
 						data: cause1
 					},
 					{
 						label: `${this.state.selectedCause2}`,
 						fill: false,
 						lineTension: 0.5,
-						backgroundColor: 'rgba(0,255,0,0.5)',
+						backgroundColor: (context) => {
+							let index = context.dataIndex;
+							let value = context.dataset.data[index];
+							return value > this.state.cause2Avg * 2 ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
+							value < this.state.cause2Avg / 2 ? 'rgba(255,0,0,0.5)' :  
+							'rgba(0,255,0,0.5)';},
 						borderColor: 'rgba(0,255,0,0.5)',
-						borderWidth: 2,
+						borderWidth: 1,
+						radius: 4,
 						data: cause2
 					}
 				]
@@ -258,9 +269,6 @@ export default class Timeline extends React.Component {
 								ref={this.chartReference}
 								data={this.state}
 								options={{
-									color: [ 'red', 
-									'blue', 
-								'green'],
 									height: 50,
 									width: 50,
 									legend: {
