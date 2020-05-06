@@ -11,6 +11,7 @@ import Timeline from './Timeline'
 import Dashboard from './Dashboard'
 import GlobalCauses from './GlobalCauses'
 import NationalCauses from './NationalCauses'
+import Correlation from './Correlation'
 
 const App = () => {
 	const [isAuthenticated, setAuthenticated] = useState(false);
@@ -84,6 +85,14 @@ const App = () => {
 						path="/NationalCauses"
 						component={
 							NationalCauses
+						}
+					/>
+					<PrivateRoute
+						isAuthenticated={isAuthenticated}
+						exact
+						path="/Correlation"
+						component={
+							Correlation
 						}
 					/>
 				</Switch>

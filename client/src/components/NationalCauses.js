@@ -108,7 +108,6 @@ export default class NationalCauses extends React.Component {
 							"#f5f242",
 							"#c5f542",
 						],
-						borderColor: 'rgba(0,0,0,1)',
 						borderWidth: 2,
 						data: numDeaths
 					  }

@@ -44,6 +44,7 @@ export default class PageNavbar extends React.Component {
 					<Link className="header-link" to={"/timeline"}>Timeline</Link>
 					<Link className="header-link" to={"/NationalCauses"}>National Causes</Link>
 					<Link className="header-link" to={"/GlobalCauses"}>Global Causes</Link>
+					<Link className="header-link" to={"/Correlation"}>Population vs. Cause of Death</Link>
 			        </div>
 			      </div>
 			    </nav>
