@@ -82,6 +82,8 @@ app.get('/timeline/average/:country/:cause1/:cause2', routes.getAvgNumDeaths);
 
 app.get('/timeline/population/:country', routes.getTimelinePop);
 
+app.get('/gcorrelation/:country/:cause', routes.getCorrelation);
+
 app.listen(8081, () => {
 	console.log(`Server listening on PORT 8081`);
 });

@@ -1,0 +1,16 @@
+.globalcauses-container {
+    display: flex;
+    flex-flow: column wrap;
+    margin-top: 10px;
+  }
+
+.globalcauses-container .globalcauses-header, .results-container .correlationResults {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    height: 40px;
+  }
+
+.header, .correlationResults .year, .correlationResults .country, .correlationResults .population, .correlationResults .cause, .correlationResults .num_deaths {
+    flex: 1 0 15%;
+  }
