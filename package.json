@@ -14,10 +14,13 @@
   },
   "homepage": "https://github.com/caromurp/CIS450_Project#readme",
   "dependencies": {
+    "bootstrap": "^4.4.1",
     "chart.js": "^2.9.3",
     "concurrently": "^5.1.0",
     "nodemon": "^2.0.3",
-    "react-chartjs-2": "^2.9.0"
+    "react-bootstrap": "^1.0.1",
+    "react-chartjs-2": "^2.9.0",
+    "react-icons": "^3.10.0"
   },
   "scripts": {
     "dev": "concurrently \"cd server && npm run start \" \"cd client && npm start\" "
