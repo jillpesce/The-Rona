@@ -1,16 +1,19 @@
 .globalcauses-container {
-    display: flex;
-    flex-flow: column wrap;
-    margin-top: 10px;
-  }
+  display: flex;
+  flex-flow: column wrap;
+  margin-top: 10px;
+}
 
-.globalcauses-container .globalcauses-header, .results-container .globalCauseResults {
-    display: flex;
-    flex-flow: row nowrap;
-    align-items: center;
-    height: 40px;
-  }
+.globalcauses-container .globalcauses-header,
+.results-container .globalCauseResults {
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  height: 40px;
+}
 
-.header, .globalCauseResults .cause, .globalCauseResults .num_deaths {
-    flex: 1 0 15%;
-  }
+.header,
+.globalCauseResults .cause,
+.globalCauseResults .num_deaths {
+  flex: 1 0 15%;
+}

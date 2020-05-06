@@ -1,9 +1,8 @@
 import React from "react";
 import PageNavbar from "./PageNavbar";
-import CoronaVirusRow from "./CoronaVirusRow";
 import "bootstrap/dist/css/bootstrap.min.css";
-import "../style/CoronaVirus.css";
-import { Line } from "react-chartjs-2";
+import "../style/LifeExpCalc.css";
+import "../style/Timeline.css";
 
 export default class LifeExpCalc extends React.Component {
   constructor(props) {
@@ -16,7 +15,8 @@ export default class LifeExpCalc extends React.Component {
       races: [],
       sexes: [],
       years: [],
-      data: [],
+      avgYears: undefined,
+      isSubmitted: false,
     };
 
     this.submit = this.submit.bind(this);
@@ -164,16 +164,11 @@ export default class LifeExpCalc extends React.Component {
           if (!avgLifeExp) return;
 
           console.log(typeof avgLifeExp);
-          console.log(avgLifeExp);
-
-          // let timelineDataDivs = timelineDataList.map((data, i) =>
-          //     <TimelineRow key={i} year={data.year}
-          //         deaths_cause1={data.deaths_cause1}
-          //         deaths_cause2={data.deaths_cause2}/>
-          // );
+          console.log(avgLifeExp[0].avg_life_expectancy);
 
           this.setState({
-            data: avgLifeExp,
+            avgYears: avgLifeExp[0].avg_life_expectancy.toLocaleString(),
+            isSubmitted: true,
           });
         },
         (err) => {
@@ -184,17 +179,17 @@ export default class LifeExpCalc extends React.Component {
 
   render() {
     return (
-      <div className="Timeline">
-        <PageNavbar active="timeline" />
+      <div className="LifeExpCalc">
+        <PageNavbar active="lifeexpcalc" />
 
-        <div className="container timeline-container">
+        <div className="container header-container">
           <div className="jumbotron">
             <div className="h5">Life Expectancy Calculator</div>
             <p>
               Please choose from the demographic categories and options below to
               calculate average life expectancy.
             </p>
-            <div className="countries-container">
+            <div className="input-container">
               <div className="dropdown-container">
                 <select
                   value={this.state.selectedRace}
@@ -230,6 +225,13 @@ export default class LifeExpCalc extends React.Component {
               </div>
             </div>
           </div>
+
+          {this.state.isSubmitted && (
+            <div className="avg-life-exp-container">
+              <div className="years">{this.state.avgYears}</div>
+              <p className="years-label">Years</p>
+            </div>
+          )}
         </div>
       </div>
     );

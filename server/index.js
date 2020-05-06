@@ -83,7 +83,7 @@ app.get("/nationalcauses/:year", routes.getTopNationalCauses);
 
 app.get("/coronavirus/:country", routes.coronaDataPerCountry);
 
-app.get("/timeline/:country/:cause1/:cause2", routes.timelineData);
+//app.get("/timeline/:country/:cause1/:cause2", routes.timelineData);
 
 app.get("/lecraces", routes.getLifeExpRaces);
 

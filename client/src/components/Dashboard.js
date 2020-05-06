@@ -23,8 +23,10 @@ export default class Dashboard extends React.Component {
     return (
       <div>
         <PageNavbar active="dashboard" />
-        <h3>hello we in dashboarT</h3>
+        <br></br>
         <div className="dashboard-container">
+          <h1>Welcome!</h1>
+          <br></br>
           <CardDeck>
             <Card className="text-center">
               <Card.Header>Coronavirus</Card.Header>
@@ -54,10 +56,9 @@ export default class Dashboard extends React.Component {
             <Card className="text-center">
               <Card.Header>National Causes</Card.Header>
               <Card.Body>
-                <Card.Title>Special title treatment</Card.Title>
                 <Card.Text>
-                  With supporting text below as a natural lead-in to additional
-                  content.
+                  See how the leading causes of death have changed in the United
+                  States from 1999.
                 </Card.Text>
                 <Button variant="outline-primary">
                   <Link to={"/NationalCauses"}>See page</Link>
@@ -71,10 +72,9 @@ export default class Dashboard extends React.Component {
             <Card className="text-center">
               <Card.Header>Global Causes</Card.Header>
               <Card.Body>
-                <Card.Title>Special title treatment</Card.Title>
                 <Card.Text>
-                  With supporting text below as a natural lead-in to additional
-                  content.
+                  See how the leading causes of death have changed globally from
+                  1990.
                 </Card.Text>
                 <Button variant="outline-primary">
                   <Link to={"/GlobalCauses"}>See page</Link>
@@ -84,13 +84,12 @@ export default class Dashboard extends React.Component {
             <Card className="text-center">
               <Card.Header>Life Expectancy Calculator</Card.Header>
               <Card.Body>
-                <Card.Title>Special title treatment</Card.Title>
                 <Card.Text>
-                  With supporting text below as a natural lead-in to additional
-                  content.
+                  Calculate the life expectancy for certain demographic
+                  categories.
                 </Card.Text>
                 <Button variant="outline-primary">
-                  <Link to={"/GlobalCauses"}>See page</Link>
+                  <Link to={"/LifeExpCalc"}>See page</Link>
                 </Button>
               </Card.Body>
             </Card>
