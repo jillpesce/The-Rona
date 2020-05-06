@@ -8,6 +8,8 @@ import SignIn from "./SignIn";
 import GlobalCauses from "./GlobalCauses";
 import NationalCauses from "./NationalCauses";
 import LifeExpCalc from "./LifeExpCalc";
+import React, { useState, useEffect } from "react";
+import Correlation from "./Correlation";
 
 const App = () => {
   const [isAuthenticated, setAuthenticated] = useState(false);
@@ -83,6 +85,12 @@ const App = () => {
             exact
             path="/NationalCauses"
             component={NationalCauses}
+          />
+          <PrivateRoute
+            isAuthenticated={isAuthenticated}
+            exact
+            path="/Correlation"
+            component={Correlation}
           />
           <PrivateRoute
             isAuthenticated={isAuthenticated}

@@ -187,14 +187,12 @@ export default class Timeline extends React.Component {
 			console.log(err);
 		}).then(timelineAvg => {
 			if (!timelineAvg) return;
-
 			this.setState({
-				cause1Avg: Math.round(timelineAvg[0].avg1).toLocaleString(),
-				cause2Avg: Math.round(timelineAvg[0].avg2).toLocaleString(),
+				cause1Avg: Math.round(timelineAvg[0].avg1),
+				cause2Avg: Math.round(timelineAvg[0].avg2),
 				stdev1: timelineAvg[0].stdev1,
 				stdev2: timelineAvg[0].stdev2
 			});
-			console.log(this.chartReference);
 
 		}, err => {
 			console.log(err);
@@ -211,7 +209,6 @@ export default class Timeline extends React.Component {
 			this.setState({
 				population: timelinePop[0].population
 			});
-			console.log(this.chartReference);
 
 		}, err => {
 			console.log(err);
@@ -256,16 +253,16 @@ export default class Timeline extends React.Component {
 							<div className="statistics">
 								<div className="cause1-stat">
 									<div className="stat-val-cause1">
-										{this.state.cause1Avg}
+										{this.state.cause1Avg && this.state.cause1Avg.toLocaleString()}
 									</div>
 									<p className="stat">Average Deaths By {this.state.submittedCause1}</p>
 								</div>
 								<div className="pop-stat">
-									<div className="stat-val-pop">{this.state.population.toLocaleString()}</div>
+									<div className="stat-val-pop">{this.state.population && this.state.population.toLocaleString()}</div>
 									<p className="stat">Total Population</p>
 								</div>
 								<div className="cause2-stat">
-									<div className="stat-val-cause2">{this.state.cause2Avg}</div>
+									<div className="stat-val-cause2">{this.state.cause2Avg && this.state.cause2Avg.toLocaleString()}</div>
 									<p className="stat">Average Deaths by {this.state.submittedCause2}</p>
 								</div>
 							</div>

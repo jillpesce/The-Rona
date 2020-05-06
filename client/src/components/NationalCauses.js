@@ -5,6 +5,8 @@ import Footer from './Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/GlobalCauses.css';
+import {Bar} from 'react-chartjs-2';
+import {Doughnut} from 'react-chartjs-2';
 
 export default class NationalCauses extends React.Component {
 	constructor(props) {
@@ -14,7 +16,21 @@ export default class NationalCauses extends React.Component {
 			selectedYear: "",
 			countries: [],
 			years: [],
-            data: []
+			data: [],
+
+			graphState : {
+				labels: [],
+				datasets: [
+				  {
+					label: 'Number of Deaths',
+					backgroundColor: 'rgba(75,192,192,1)',
+					borderColor: 'rgba(0,0,0,1)',
+					borderWidth: 2,
+					data: []
+				  }
+				]
+			}
+			
         };
 
         this.submit = this.submit.bind(this);
@@ -68,8 +84,37 @@ export default class NationalCauses extends React.Component {
 								num_deaths={data.num_deaths}/>
 			);
 
+			let labels = [];
+			let numDeaths = [];
+			globalCausesList.forEach(elem => {
+				labels.push(elem.cause)
+				numDeaths.push(elem.num_deaths)
+			})
+
 			this.setState({
-				data: GlobalDataDivs
+				data: GlobalDataDivs,
+				graphState : {
+					labels: labels,
+					datasets: [
+					  {
+						label: 'Number of deaths',
+						backgroundColor: ["#003f5c",
+							"#2f4b7c",
+							"#665191",
+							"#a05195",
+							"#d45087",
+							"#f95d6a",
+							"#ff7c43",
+							"#ffa600",
+							"#f5dd42",
+							"#f5f242",
+							"#c5f542",
+						],
+						borderWidth: 2,
+						data: numDeaths
+					  }
+					]
+				  }
 			});
 		}, err => {
 			console.log(err);
@@ -96,6 +141,41 @@ export default class NationalCauses extends React.Component {
 			          </div>
 			        </div>
 			      </div>
+
+				  {this.state.selectedYear !== "" && this.state.data && (
+				  <Bar
+					data={this.state.graphState}
+					options={{
+						title:{
+						display:true,
+						text:'National Causes of Death in ' + this.state.selectedYear,
+						fontSize:20
+						},
+						legend:{
+						display:true,
+						position:'right'
+						}
+					}}
+					/>
+				  )}
+
+					{this.state.selectedYear !== "" && this.state.data && (
+					<Doughnut
+						data={this.state.graphState}
+						options={{
+							title:{
+							display:true,
+							text:'National Causes of Death in ' + this.state.selectedYear + ' by proportion',
+							fontSize:20
+							},
+							legend:{
+							display:true,
+							position:'right'
+							}
+						}}
+					/>
+					)}
+
 			      <div className="jumbotron">
 			        <div className="globalcauses-container">
 			          <div className="globalcauses-header">

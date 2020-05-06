@@ -5,6 +5,7 @@ import Footer from './Footer';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/GlobalCauses.css';
+import {Bar} from 'react-chartjs-2';
 
 export default class GlobalCauses extends React.Component {
 	constructor(props) {
@@ -14,7 +15,23 @@ export default class GlobalCauses extends React.Component {
 			selectedYear: "",
 			countries: [],
 			years: [],
-            data: []
+			data: [],
+			// labels: [],
+			causeDeaths: [],
+
+			// init data
+			graphState : {
+				labels: [],
+				datasets: [
+				  {
+					label: 'Number of Deaths',
+					backgroundColor: 'rgba(75,192,192,1)',
+					borderColor: 'rgba(0,0,0,1)',
+					borderWidth: 2,
+					data: []
+				  }
+				]
+			  }
         };
 
         this.submit = this.submit.bind(this);
@@ -35,10 +52,9 @@ export default class GlobalCauses extends React.Component {
 
             let yearsDivs = yearsList.map((year, i) => 
                 <option key={i} value={year.year}>{year.year}</option>
-            );
-
+			);
             this.setState({
-                years: yearsDivs,
+				years: yearsDivs,
             });
         }, err => {
             console.log(err);
@@ -69,9 +85,28 @@ export default class GlobalCauses extends React.Component {
 								num_deaths={data.num_deaths}/>
 			);
 
-			this.setState({
-				data: GlobalDataDivs
-			});
+			let labels = [];
+			let numDeaths = [];
+			globalCausesList.forEach(elem => {
+				labels.push(elem.cause)
+				numDeaths.push(elem.num_deaths)
+			})
+
+            this.setState({
+				data: GlobalDataDivs,
+				graphState : {
+					labels: labels,
+					datasets: [
+					  {
+						label: 'Number of deaths',
+						backgroundColor: 'rgba(75,192,192,1)',
+						borderColor: 'rgba(0,0,0,1)',
+						borderWidth: 2,
+						data: numDeaths
+					  }
+					]
+				  }
+            });
 		}, err => {
 			console.log(err);
 		});
@@ -97,6 +132,22 @@ export default class GlobalCauses extends React.Component {
 			          </div>
 			        </div>
 			      </div>
+				  {this.state.selectedYear !== "" && this.state.data && (
+				  <Bar
+					data={this.state.graphState}
+					options={{
+						title:{
+						display:true,
+						text:'Global Causes of Death in ' + this.state.selectedYear,
+						fontSize:20
+						},
+						legend:{
+						display:true,
+						position:'right'
+						}
+					}}
+					/>
+				  )}
 			      <div className="jumbotron">
 			        <div className="globalcauses-container">
 			          <div className="globalcauses-header">

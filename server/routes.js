@@ -274,10 +274,10 @@ function getTopNationalCauses(req, res) {
   var query = `
         SELECT cause, SUM(num_deaths) as num_deaths
         FROM cause_of_death_nationally
-        WHERE year = "${year}"
+        WHERE year = "${year}" AND cause <> "All causes"
         AND num_deaths IS NOT NULL
         GROUP BY (cause)
-        ORDER BY SUM(num_deaths) DESC    
+        ORDER BY SUM(num_deaths) DESC  
     `;
   if (connection) {
     connection.query(query, function (err, rows, fields) {
@@ -355,6 +355,41 @@ function getAvgLifeExpectancy(req, res) {
   }
 }
 
+function getCorrelation(req, res) {
+  let country = req.params.country;
+  let cause = req.params.cause;
+  var query = `
+        WITH TotalCorona AS (
+            SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, 2020 as year, SUM(c.deaths) as num
+            FROM coronavirus c 
+            WHERE c.country = "${country}"
+            GROUP BY (c.country)),
+        CauseByPopulation AS (
+            SELECT c.country, c.cause, c.year, c.num_deaths as num
+            FROM cause_of_death_globally c
+            WHERE c.country = "${country}"
+            AND c.num_deaths IS NOT NULL
+            AND c.num_deaths <> 0)
+        SELECT * 
+        FROM
+            (SELECT *
+            FROM CauseByPopulation
+            UNION
+            SELECT *
+            FROM TotalCorona) a
+        NATURAL JOIN population p
+        WHERE cause = "${cause}"
+    `;
+  if (connection) {
+    connection.query(query, function (err, rows, fields) {
+      if (err) console.log(err);
+      else {
+        res.json(rows);
+      }
+    });
+  }
+}
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   coronaDataPerCountry: coronaDataPerCountry,
@@ -374,4 +409,5 @@ module.exports = {
   getLifeExpSexes: getLifeExpSexes,
   getLifeExpYears: getLifeExpYears,
   getAvgLifeExpectancy: getAvgLifeExpectancy,
+  getCorrelation: getCorrelation,
 };
