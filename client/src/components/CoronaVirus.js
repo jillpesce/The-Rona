@@ -2,8 +2,11 @@ import React from 'react';
 import PageNavbar from './PageNavbar';
 import CoronaVirusRow from './CoronaVirusRow';
 import CoronaVsOtherCausesRow from './CoronaVsOtherCausesRow';
+import Footer from './Footer';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/CoronaVirus.css';
+
 import {Line} from 'react-chartjs-2';
 import {Bar} from 'react-chartjs-2';
 
@@ -88,9 +91,9 @@ export default class CoronaVirus extends React.Component {
 			if (!globalStats) return;
 
 			this.setState({
-				currentGlobalConfirmed: globalStats[0].confirmed,
-				currentGlobalRecovered: globalStats[0].recovered,
-				currentGlobalDeaths: globalStats[0].deaths
+				currentGlobalConfirmed: globalStats[0].confirmed.toLocaleString(),
+				currentGlobalRecovered: globalStats[0].recovered.toLocaleString(),
+				currentGlobalDeaths: globalStats[0].deaths.toLocaleString()
             });
         }, err => {
             console.log(err);
@@ -344,6 +347,7 @@ export default class CoronaVirus extends React.Component {
 				  )}
 				  </div>
 			    </div>
+				<Footer></Footer>
 			</div>
 		);
 	}

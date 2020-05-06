@@ -42,7 +42,7 @@ const App = () => {
 	}, []);
 
 	return (
-		<div className="App">
+		<div className="App"  style={{minHeight: '100vh', position: 'relative'}}>
 			<Router>
 				<Switch>
 					<Route

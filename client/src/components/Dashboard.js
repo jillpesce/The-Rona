@@ -1,11 +1,10 @@
 import React from 'react';
+
+import PageNavbar from './PageNavbar';
+import Footer from './Footer';
+
 import '../style/Dashboard.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import PageNavbar from './PageNavbar';
-import GenreButton from './GenreButton';
-import DashboardMovieRow from './DashboardMovieRow';
-import queryString from "query-string";
-import PropTypes from 'prop-types';
 
 export default class Dashboard extends React.Component {
   
@@ -39,6 +38,7 @@ export default class Dashboard extends React.Component {
               </div>
             </a> 
           </h3>
+          <Footer></Footer>
        </div> 
     );
   }
