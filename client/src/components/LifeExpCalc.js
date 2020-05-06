@@ -1,5 +1,7 @@
 import React from "react";
 import PageNavbar from "./PageNavbar";
+import Footer from "./Footer";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../style/LifeExpCalc.css";
 import "../style/Timeline.css";
@@ -233,6 +235,7 @@ export default class LifeExpCalc extends React.Component {
             </div>
           )}
         </div>
+        <Footer></Footer>
       </div>
     );
   }

@@ -41,7 +41,7 @@ const App = () => {
 
   console.log("App isauthenticated = " + isAuthenticated);
   return (
-    <div className="App">
+    <div className="App" style={{position: 'absolute', minHeight: '100vh'}}>
       <Router>
         <Switch>
           <Route

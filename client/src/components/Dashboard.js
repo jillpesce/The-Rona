@@ -2,6 +2,8 @@ import React from "react";
 import "../style/Dashboard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PageNavbar from "./PageNavbar";
+import Footer from "./Footer";
+
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import CardDeck from "react-bootstrap/CardDeck";
@@ -95,6 +97,7 @@ export default class Dashboard extends React.Component {
             </Card>
           </CardDeck>
         </div>
+        <Footer></Footer>
       </div>
     );
   }
