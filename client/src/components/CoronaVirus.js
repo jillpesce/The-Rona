@@ -91,9 +91,9 @@ export default class CoronaVirus extends React.Component {
 			if (!globalStats) return;
 
 			this.setState({
-				currentGlobalConfirmed: globalStats[0].confirmed.toLocaleString(),
-				currentGlobalRecovered: globalStats[0].recovered.toLocaleString(),
-				currentGlobalDeaths: globalStats[0].deaths.toLocaleString()
+				currentGlobalConfirmed: globalStats[0].confirmed,
+				currentGlobalRecovered: globalStats[0].recovered,
+				currentGlobalDeaths: globalStats[0].deaths
             });
         }, err => {
             console.log(err);
@@ -233,16 +233,16 @@ export default class CoronaVirus extends React.Component {
 						<div className="global-statistics">
 							<div className="global-confirmed-stat">
 								<div className="stat-val-confirmed">
-									{this.state.currentGlobalConfirmed}
+									{this.state.currentGlobalConfirmed && this.state.currentGlobalConfirmed.toLocaleString()}
 								</div>
 								<p className="stat">Global Confirmed</p>
 							</div>
 							<div className="global-recovered-stat">
-								<div className="stat-val-recovered">{this.state.currentGlobalRecovered}</div>
+								<div className="stat-val-recovered">{this.state.currentGlobalRecovered && this.state.currentGlobalRecovered.toLocaleString()}</div>
 								<p className="stat">Global Recovered</p>
 							</div>
 							<div className="global-deaths-stat">
-								<div className="stat-val-deaths">{this.state.currentGlobalDeaths}</div>
+								<div className="stat-val-deaths">{this.state.currentGlobalDeaths && this.state.currentGlobalDeaths.toLocaleString()}</div>
 								<p className="stat">Global Deaths</p>
 							</div>
 						</div>
