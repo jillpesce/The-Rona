@@ -72,15 +72,11 @@ export default class CoronaVirus extends React.Component {
         (countriesList) => {
           if (!countriesList) return;
 
-			this.setState({
-				currentGlobalConfirmed: globalStats[0].confirmed,
-				currentGlobalRecovered: globalStats[0].recovered,
-				currentGlobalDeaths: globalStats[0].deaths
-            });
-        }, err => {
-            console.log(err);
-        });
-    }
+          let countriesDivs = countriesList.map((country, i) => (
+            <option key={i} value={country.country}>
+              {country.country}
+            </option>
+          ));
 
           this.setState({
             countries: countriesDivs,
@@ -108,9 +104,9 @@ export default class CoronaVirus extends React.Component {
           if (!globalStats) return;
 
           this.setState({
-            currentGlobalConfirmed: globalStats[0].confirmed.toLocaleString(),
-            currentGlobalRecovered: globalStats[0].recovered.toLocaleString(),
-            currentGlobalDeaths: globalStats[0].deaths.toLocaleString(),
+            currentGlobalConfirmed: globalStats[0].confirmed,
+            currentGlobalRecovered: globalStats[0].recovered,
+            currentGlobalDeaths: globalStats[0].deaths,
           });
         },
         (err) => {
@@ -208,134 +204,234 @@ export default class CoronaVirus extends React.Component {
         }
       );
 
-	render() {
-		return (
-			<div className="CoronaVirus">
-				<PageNavbar active="coronavirus" />
-				<div className="container coronavirus-container">
-					<div className="global-statistics-contrainer">
-						<div className="overview">
-							<h1 className="overview-title">Coronavirus Statistics</h1>
-						</div>
-						<div className="global-statistics">
-							<div className="global-confirmed-stat">
-								<div className="stat-val-confirmed">
-									{this.state.currentGlobalConfirmed && this.state.currentGlobalConfirmed.toLocaleString()}
-								</div>
-								<p className="stat">Global Confirmed</p>
-							</div>
-							<div className="global-recovered-stat">
-								<div className="stat-val-recovered">{this.state.currentGlobalRecovered && this.state.currentGlobalRecovered.toLocaleString()}</div>
-								<p className="stat">Global Recovered</p>
-							</div>
-							<div className="global-deaths-stat">
-								<div className="stat-val-deaths">{this.state.currentGlobalDeaths && this.state.currentGlobalDeaths.toLocaleString()}</div>
-								<p className="stat">Global Deaths</p>
-							</div>
-						</div>
-					</div>
-			      <div className="jumbotron">
-			        <div className="h5">Coronavirus</div>
-					<p>Please select a country to view its case statistics.</p>
-			        <div className="countries-container">
-			          <div className="dropdown-container">
-			            <select value={this.state.selectedCountry} onChange={this.handleChange} className="dropdown" id="countriesDropdown">
-			            	{this.state.countries}
-			            </select>
-			            <button className="submit-btn" id="countriesSubmitBtn" onClick={this.submitCountry}>Submit</button>
-			          </div>
-			        </div>
-			      </div>
-				  <div>
-				  {this.state.selectedCountry !== "" && this.state.datasets && (
-					<Line
-					data={this.state}
-					options={{
-						title:{
-						display:true,
-						text: this.state.submittedCountry+ `'s Case Statistics`,
-						fontSize:20
-						},
-						height: 50,
-						width: 50,
-						legend:{
-						display:true,
-						position:'right'
-						},
-						scales: {
-							xAxes: [{
-								type: 'time',
-								ticks: {
-									autoSkip: true,
-									maxTicksLimit: 20
-								}
-							}]
-							
-						}
-					}}
-					/>
-				  )}
-				  
-				</div>
-				  <div className="chloe">
-				  {this.state.selectedCountry !== "" && this.state.datasets && (
-					  <div>
-						<div className="jumbotron">
-							<div className="coronadata-container">
-							<div className="coronadata-header">
-								<div className="header"><strong>Date</strong></div>
-								<div className="header"><strong>Confirmed</strong></div>
-								<div className="header"><strong>Recovered</strong></div>
-								<div className="header"><strong>Deaths</strong></div>
-								<div className="header"><strong>Confirmed Globally</strong></div>
-								<div className="header"><strong>Recovered Globally</strong></div>
-								<div className="header"><strong>Deaths Globally</strong></div>
-							</div>
-							<div className="results-container" id="results">
-								{this.state.data}
-							</div>
-							</div>
-						</div>
-						{this.state.selectedCountry !== "US" && (
-						<div>
-						
-				  		<div>Below, you can see how COVID-19's death toll compares with 
-							  other leading causes of death in {this.state.submittedCountry}.
-						</div>
-						<Bar
-							data={this.state.stateTwo}
-							options={{
-								title:{
-								display:true,
-								text:'Causes of Death in ' + this.state.submittedCountry,
-								fontSize:20
-								},
-								legend:{
-								display:true,
-								position:'right'
-								}
-							}}
-							/>
-						<div className="jumbotron">
-							<div className="coronavsother-container">
-							<div className="coronavsother-header">
-								<div className="header"><strong>Cause</strong></div>
-								<div className="header"><strong>Number of Deaths</strong></div>
-							</div>
-							<div className="coronavsother-results-container" id="other-results">
-								{this.state.otherCauses}
-							</div>
-							</div>
-						</div>
-						
-						</div>
-						)}
-				  </div>
-				  )}
-				  </div>
-			    </div>
-				<Footer></Footer>
-			</div>
-		);
-	}
+    //renderOtherCauses();
+    console.log("fetch 2");
+    fetch(
+      `http://localhost:8081/coronaVsOtherCauses/'${this.state.selectedCountry}'`,
+      {
+        method: "GET",
+      }
+    )
+      .then(
+        (res) => {
+          return res.json();
+        },
+        (err) => {
+          console.log(err);
+        }
+      )
+      .then(
+        (otherCausesList) => {
+          console.log("checkpoint 1");
+          if (!otherCausesList) return;
+
+          console.log(otherCausesList);
+          console.log("checkpoint 2");
+          let otherCausesDivs = otherCausesList.map((cause, i) => (
+            <CoronaVsOtherCausesRow
+              key={i}
+              cause={cause.cause}
+              num={cause.num}
+            />
+          ));
+
+          let causeLabels = [];
+          let numDeaths = [];
+          otherCausesList.forEach((elem) => {
+            causeLabels.push(elem.cause);
+            numDeaths.push(elem.num);
+          });
+
+          this.setState({
+            otherCauses: otherCausesDivs,
+            stateTwo: {
+              labels: causeLabels,
+              datasets: [
+                {
+                  label: "Number of Deaths",
+                  backgroundColor: "rgba(75,192,192,1)",
+                  borderColor: "rgba(0,0,0,1)",
+                  borderWidth: 2,
+                  data: numDeaths,
+                },
+              ],
+            },
+          });
+        },
+        (err) => {
+          console.log(err);
+        }
+      );
+  }
+
+  render() {
+    return (
+      <div className="CoronaVirus">
+        <PageNavbar active="coronavirus" />
+        <div className="container coronavirus-container">
+          <div className="global-statistics-contrainer">
+            <div className="overview">
+              <h1 className="overview-title">Coronavirus Statistics</h1>
+            </div>
+            <div className="global-statistics">
+              <div className="global-confirmed-stat">
+                <div className="stat-val-confirmed">
+                  {this.state.currentGlobalConfirmed &&
+                    this.state.currentGlobalConfirmed.toLocaleString()}
+                </div>
+                <p className="stat">Global Confirmed</p>
+              </div>
+              <div className="global-recovered-stat">
+                <div className="stat-val-recovered">
+                  {this.state.currentGlobalRecovered &&
+                    this.state.currentGlobalRecovered.toLocaleString()}
+                </div>
+                <p className="stat">Global Recovered</p>
+              </div>
+              <div className="global-deaths-stat">
+                <div className="stat-val-deaths">
+                  {this.state.currentGlobalDeaths &&
+                    this.state.currentGlobalDeaths.toLocaleString()}
+                </div>
+                <p className="stat">Global Deaths</p>
+              </div>
+            </div>
+          </div>
+          <div className="jumbotron">
+            <div className="h5">Coronavirus</div>
+            <p>Please select a country to view its case statistics.</p>
+            <div className="countries-container">
+              <div className="dropdown-container">
+                <select
+                  value={this.state.selectedCountry}
+                  onChange={this.handleChange}
+                  className="dropdown"
+                  id="countriesDropdown"
+                >
+                  {this.state.countries}
+                </select>
+                <button
+                  className="submit-btn"
+                  id="countriesSubmitBtn"
+                  onClick={this.submitCountry}
+                >
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+          <div>
+            {this.state.selectedCountry !== "" && this.state.datasets && (
+              <Line
+                data={this.state}
+                options={{
+                  title: {
+                    display: true,
+                    text: this.state.submittedCountry + `'s Case Statistics`,
+                    fontSize: 20,
+                  },
+                  height: 50,
+                  width: 50,
+                  legend: {
+                    display: true,
+                    position: "right",
+                  },
+                  scales: {
+                    xAxes: [
+                      {
+                        type: "time",
+                        ticks: {
+                          autoSkip: true,
+                          maxTicksLimit: 20,
+                        },
+                      },
+                    ],
+                  },
+                }}
+              />
+            )}
+          </div>
+          <div className="chloe">
+            {this.state.selectedCountry !== "" && this.state.datasets && (
+              <div>
+                <div className="jumbotron">
+                  <div className="coronadata-container">
+                    <div className="coronadata-header">
+                      <div className="header">
+                        <strong>Date</strong>
+                      </div>
+                      <div className="header">
+                        <strong>Confirmed</strong>
+                      </div>
+                      <div className="header">
+                        <strong>Recovered</strong>
+                      </div>
+                      <div className="header">
+                        <strong>Deaths</strong>
+                      </div>
+                      <div className="header">
+                        <strong>Confirmed Globally</strong>
+                      </div>
+                      <div className="header">
+                        <strong>Recovered Globally</strong>
+                      </div>
+                      <div className="header">
+                        <strong>Deaths Globally</strong>
+                      </div>
+                    </div>
+                    <div className="results-container" id="results">
+                      {this.state.data}
+                    </div>
+                  </div>
+                </div>
+                {this.state.selectedCountry !== "US" && (
+                  <div>
+                    <div>
+                      Below, you can see how COVID-19's death toll compares with
+                      other leading causes of death in{" "}
+                      {this.state.submittedCountry}.
+                    </div>
+                    <Bar
+                      data={this.state.stateTwo}
+                      options={{
+                        title: {
+                          display: true,
+                          text:
+                            "Causes of Death in " + this.state.submittedCountry,
+                          fontSize: 20,
+                        },
+                        legend: {
+                          display: true,
+                          position: "right",
+                        },
+                      }}
+                    />
+                    <div className="jumbotron">
+                      <div className="coronavsother-container">
+                        <div className="coronavsother-header">
+                          <div className="header">
+                            <strong>Cause</strong>
+                          </div>
+                          <div className="header">
+                            <strong>Number of Deaths</strong>
+                          </div>
+                        </div>
+                        <div
+                          className="coronavsother-results-container"
+                          id="other-results"
+                        >
+                          {this.state.otherCauses}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        <Footer></Footer>
+      </div>
+    );
+  }
 }

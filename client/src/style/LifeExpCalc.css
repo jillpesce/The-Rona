@@ -11,12 +11,14 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
 }
 
 .years {
   color: rgba(0, 0, 255, 0.5);
   font-weight: bold;
   font-size: 200px;
+  height: 230px;
 }
 
 .years-label {

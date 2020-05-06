@@ -28,7 +28,7 @@ export default class Dashboard extends React.Component {
           <h1>Welcome!</h1>
           <br></br>
           <CardDeck>
-            <Card className="text-center">
+            <Card className="text-center" border="success">
               <Card.Header>Coronavirus</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -41,7 +41,7 @@ export default class Dashboard extends React.Component {
                 </Button>
               </Card.Body>
             </Card>
-            <Card className="text-center">
+            <Card className="text-center" border="danger">
               <Card.Header>Timeline</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -53,7 +53,7 @@ export default class Dashboard extends React.Component {
                 </Button>
               </Card.Body>
             </Card>
-            <Card className="text-center">
+            <Card className="text-center" border="primary">
               <Card.Header>National Causes</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -69,7 +69,7 @@ export default class Dashboard extends React.Component {
         </div>
         <div className="dashboard-container">
           <CardDeck>
-            <Card className="text-center">
+            <Card className="text-center" border="warning">
               <Card.Header>Global Causes</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -81,7 +81,7 @@ export default class Dashboard extends React.Component {
                 </Button>
               </Card.Body>
             </Card>
-            <Card className="text-center">
+            <Card className="text-center" border="info">
               <Card.Header>Life Expectancy Calculator</Card.Header>
               <Card.Body>
                 <Card.Text>

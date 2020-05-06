@@ -8,7 +8,6 @@ import SignIn from "./SignIn";
 import GlobalCauses from "./GlobalCauses";
 import NationalCauses from "./NationalCauses";
 import LifeExpCalc from "./LifeExpCalc";
-import React, { useState, useEffect } from "react";
 import Correlation from "./Correlation";
 
 const App = () => {
