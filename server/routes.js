@@ -117,7 +117,10 @@ function getCoronaVsOtherCauses(req, res) {
 
 function getGlobalCausesCountries(req, res) {
     var query = `
-        SELECT DISTINCT country FROM cause_of_death_globally
+        SELECT DISTINCT country 
+        FROM cause_of_death_globally
+        WHERE country <> ""
+        ORDER BY country
     `;
     if (connection) {
         connection.query(query, function(err, rows, fields) {
@@ -132,6 +135,7 @@ function getGlobalCausesCountries(req, res) {
 function getGlobalCauses(req, res) {
     var query = `
         SELECT DISTINCT cause FROM cause_of_death_globally
+        ORDER BY cause
     `;
     if (connection) {
         connection.query(query, function(err, rows, fields) {
