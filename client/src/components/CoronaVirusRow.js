@@ -11,12 +11,12 @@ export default class CoronaVirusRow extends React.Component {
 		return (
 			<div className="coronaResults">
 				<div className="date">{this.props.date}</div>
-				<div className="confirmed">{this.props.confirmed}</div>
-                <div className="recovered">{this.props.recovered}</div>
-                <div className="deaths">{this.props.deaths}</div>
-                <div className="confirmed_globally">{this.props.confirmed_globally}</div>
-                <div className="recovered_globally">{this.props.recovered_globally}</div>
-                <div className="deaths_globally">{this.props.deaths_globally}</div>
+				<div className="confirmed">{this.props.confirmed.toLocaleString()}</div>
+                <div className="recovered">{this.props.recovered.toLocaleString()}</div>
+                <div className="deaths">{this.props.deaths.toLocaleString()}</div>
+                <div className="confirmed_globally">{this.props.confirmed_globally.toLocaleString()}</div>
+                <div className="recovered_globally">{this.props.recovered_globally.toLocaleString()}</div>
+                <div className="deaths_globally">{this.props.deaths_globally.toLocaleString()}</div>
 			</div>
 		);
 	}

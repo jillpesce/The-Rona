@@ -1,6 +1,8 @@
 import React from 'react';
 import PageNavbar from './PageNavbar';
 import GlobalCauseRow from './GlobalCauseRow';
+import Footer from './Footer';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/GlobalCauses.css';
 import {Bar} from 'react-chartjs-2';
@@ -158,6 +160,7 @@ export default class GlobalCauses extends React.Component {
 			        </div>
 			      </div>
 			    </div>
+				<Footer></Footer>
 			</div>
 		);
 	}

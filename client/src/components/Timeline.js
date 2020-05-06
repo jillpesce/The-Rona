@@ -1,6 +1,7 @@
 import React from 'react';
 
 import PageNavbar from './PageNavbar';
+import Footer from './Footer';
 import TimelineRow from './TimelineRow';
 import '../style/Timeline.css';
 
@@ -176,28 +177,6 @@ export default class Timeline extends React.Component {
 		}, err => {
 			console.log(err);
 		});
-		//get peak years 
-		// fetch(`http://localhost:8081/timeline/${encodeURIComponent(this.state.selectedCountry)}
-		// /${encodeURIComponent(this.state.selectedCause1)}`, {
-		// 	method: 'GET',
-		// }).then(res => {
-		// 	return res.json();
-		// }, err => {
-		// 	console.log(err);
-		// }).then(timelinePeakList => {
-		// 	if (!timelinePeakList) return;
-
-		// 	let years = [];
-
-		// 	timelinePeakList.forEach(elem => {
-		// 		years.push(elem.year);
-		// 	})
-		// 	this.setState({
-		// 		peakYears: years
-		// 	});
-		// }, err => {
-		// 	console.log(err);
-		// });
 		//get avg num deaths
 		fetch(`http://localhost:8081/timeline/average/${encodeURIComponent(this.state.selectedCountry)}
 		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
@@ -334,7 +313,7 @@ export default class Timeline extends React.Component {
 						</div>
 					</div>)}
 				</div>
-				
+				<Footer></Footer>
 			</div>
 		);
 	}

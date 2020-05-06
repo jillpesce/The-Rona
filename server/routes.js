@@ -117,7 +117,10 @@ function getCoronaVsOtherCauses(req, res) {
 
 function getGlobalCausesCountries(req, res) {
     var query = `
-        SELECT DISTINCT country FROM cause_of_death_globally
+        SELECT DISTINCT country 
+        FROM cause_of_death_globally
+        WHERE country <> ""
+        ORDER BY country
     `;
     if (connection) {
         connection.query(query, function(err, rows, fields) {
@@ -132,6 +135,7 @@ function getGlobalCausesCountries(req, res) {
 function getGlobalCauses(req, res) {
     var query = `
         SELECT DISTINCT cause FROM cause_of_death_globally
+        ORDER BY cause
     `;
     if (connection) {
         connection.query(query, function(err, rows, fields) {
@@ -144,7 +148,6 @@ function getGlobalCauses(req, res) {
 };
 
 function getTimelineData(req, res) {
-    console.log('timelineData api hit');
     let inputCountry = req.params.country;
     let inputCause1 = req.params.cause1;
     let inputCause2 = req.params.cause2;
@@ -173,41 +176,14 @@ function getTimelineData(req, res) {
     });
 }
 
-function getTimelinePeaks(req, res) {
+function getTimelinePop(req, res) {
     let inputCountry = req.params.country;
-    let inputCause = req.params.cause;
-    let query = `SELECT DISTINCT c1.year AS year
-    FROM cause_of_death_globally c1
-    WHERE (c1.cause = "${inputCause}"
-        AND c1.country = "${inputCountry}"
-        AND (c1.num_deaths > 500 + 
-            (SELECT num_deaths 
-            FROM cause_of_death_globally c2
-            WHERE c2.year = c1.year - 1
-            AND c2.cause = "${inputCause}"
-            AND c2.country = "${inputCountry}"))
-        OR  (c1.num_deaths + 500 < 
-            (SELECT c2.num_deaths 
-            FROM cause_of_death_globally c2
-            WHERE c2.year = c1.year - 1
-            AND c2.cause = "${inputCause}"
-            AND c2.country = "${inputCountry}")))
-    AND (c1.cause = "${inputCause}"
-        AND c1.country = "${inputCountry}"
-        AND (c1.num_deaths > 500 + 
-            (SELECT num_deaths 
-            FROM cause_of_death_globally c2
-            WHERE c2.year = c1.year + 1
-            AND c2.cause = "${inputCause}"
-            AND c2.country = "${inputCountry}"))
-        OR (c1.num_deaths + 500 < 
-            (SELECT c2.num_deaths 
-            FROM cause_of_death_globally c2
-            WHERE c2.year = c1.year + 1
-            AND c2.cause = "${inputCause}"
-            AND c2.country = "${inputCountry}")))
-    ORDER BY c1.year;
+    let query = `
+        SELECT population
+        FROM population
+        WHERE country = "${inputCountry}";
     `;
+
     connection.query(query, function(err, rows, fields) {
         if (err) console.log(err);
         else {
@@ -220,19 +196,19 @@ function getAvgNumDeaths(req, res) {
     let inputCountry = req.params.country;
     let inputCause1 = req.params.cause1;
     let inputCause2 = req.params.cause2;
-    let query = `WITH cause1(cause, num_deaths) AS (
-        SELECT cause, AVG(num_deaths)
+    let query = `WITH cause1(cause, num_deaths, stdev) AS (
+        SELECT cause, AVG(num_deaths), STDDEV(num_deaths)
         FROM cause_of_death_globally
         WHERE country = "${inputCountry}"
         AND cause = "${inputCause1}"
         GROUP BY cause),
-        cause2(cause, num_deaths) AS (
-        SELECT cause, AVG(num_deaths)
+        cause2(cause, num_deaths, stdev) AS (
+        SELECT cause, AVG(num_deaths), STDDEV(num_deaths)
         FROM cause_of_death_globally
         WHERE country = "${inputCountry}"
         AND cause = "${inputCause2}"
         GROUP BY cause)
-        SELECT c1.num_deaths AS avg1, c2.num_deaths AS avg2
+        SELECT c1.num_deaths AS avg1, c2.num_deaths AS avg2, c1.stdev AS stdev1, c2.stdev AS stdev2
         FROM cause1 c1, cause2 c2;
         `;
     connection.query(query, function(err, rows, fields) {
@@ -323,8 +299,9 @@ module.exports = {
     getCoronaVsOtherCauses: getCoronaVsOtherCauses,
     getGlobalCausesCountries: getGlobalCausesCountries,
     getTimelineData: getTimelineData,
-    getTimelinePeaks: getTimelinePeaks,
+   // getTimelinePeaks: getTimelinePeaks,
     getAvgNumDeaths: getAvgNumDeaths,
+    getTimelinePop: getTimelinePop,
     getGlobalCauses: getGlobalCauses,
     getGlobalCauseYears: getGlobalCauseYears,
     getTopGlobalCauses: getTopGlobalCauses,
