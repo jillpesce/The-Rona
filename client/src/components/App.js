@@ -39,7 +39,6 @@ const App = () => {
   }, []);
 
   console.log("App isauthenticated = " + isAuthenticated);
-
   return (
     <div className="App">
       <Router>

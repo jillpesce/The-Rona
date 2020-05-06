@@ -67,6 +67,13 @@ app.get("/gccountries", routes.getGlobalCausesCountries);
 app.get("/gccauses", routes.getGlobalCauses);
 
 app.get("/gyears", routes.getGlobalCauseYears);
+app.get("/coronavirus/:country", routes.coronaDataPerCountry);
+
+app.get("/globalstats", routes.getMostRecentGlobalStatistics);
+
+app.get("/coronaVsOtherCauses/:country", routes.getCoronaVsOtherCauses);
+
+app.get("/gccountries", routes.getGlobalCausesCountries);
 
 app.get("/nyears", routes.getNationalCauseYears);
 
@@ -85,6 +92,12 @@ app.get("/lecsexes", routes.getLifeExpSexes);
 app.get("/lecyears", routes.getLifeExpYears);
 
 app.get("/lifeexpcalc/:race/:sex/:year", routes.getAvgLifeExpectancy);
+
+app.get("/timeline/:country/:cause1/:cause2", routes.getTimelineData);
+
+app.get("/timeline/average/:country/:cause1/:cause2", routes.getAvgNumDeaths);
+
+app.get("/timeline/population/:country", routes.getTimelinePop);
 
 app.listen(8081, () => {
   console.log(`Server listening on PORT 8081`);
