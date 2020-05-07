@@ -1,6 +1,8 @@
 import React from 'react';
 import PageNavbar from './PageNavbar';
 import CorrelationRow from './CorrelationRow';
+import Footer from "./Footer";
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/Correlation.css';
 import {Scatter} from 'react-chartjs-2';
@@ -230,6 +232,7 @@ export default class Correlation extends React.Component {
 			        </div>
 			      </div>
 			    </div>
+				<Footer></Footer>
 			</div>
 		);
 	}
