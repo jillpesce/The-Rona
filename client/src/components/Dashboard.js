@@ -2,15 +2,15 @@ import React from "react";
 import "../style/Dashboard.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import PageNavbar from "./PageNavbar";
-import Footer from "./Footer";
-
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import CardDeck from "react-bootstrap/CardDeck";
 import { Link } from "react-router-dom";
+import Footer from "./Footer";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
+    // this.routeChangeCorona = this.routeChangeCorona.bind(this);
     super(props);
   }
 
@@ -92,8 +92,8 @@ export default class Dashboard extends React.Component {
               <Card.Header>Life Expectancy Calculator</Card.Header>
               <Card.Body>
                 <Card.Text>
-                  See how life expectancy has changed over the course of the las
-                  century.
+                  See how life expectancy has changed over the course of the
+                  last century.
                 </Card.Text>
                 <Button variant="outline-primary">
                   <Link to={"/LifeExpCalc"}>See page</Link>

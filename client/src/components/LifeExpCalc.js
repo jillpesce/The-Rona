@@ -13,6 +13,7 @@ export default class LifeExpCalc extends React.Component {
     this.chartReference = React.createRef();
 
     this.state = {
+      cache: new Map(),
       selectedCountry: "",
       countries: [],
       //years: [],
@@ -59,35 +60,6 @@ export default class LifeExpCalc extends React.Component {
           console.log(err);
         }
       );
-    // fetch("http://localhost:8081/lecyears", {
-    //   method: "GET",
-    // })
-    //   .then(
-    //     (res) => {
-    //       return res.json();
-    //     },
-    //     (err) => {
-    //       console.log(err);
-    //     }
-    //   )
-    //   .then(
-    //     (yearsList) => {
-    //       if (!yearsList) return;
-
-    //       let yearsDivs = yearsList.map((year, i) => (
-    //         <option key={i} value={year.year}>
-    //           {year.year}
-    //         </option>
-    //       ));
-
-    //       this.setState({
-    //         years: yearsDivs,
-    //       });
-    //     },
-    //     (err) => {
-    //       console.log(err);
-    //     }
-    //   );
   }
 
   handleCountry(e) {
@@ -98,54 +70,88 @@ export default class LifeExpCalc extends React.Component {
 
   submit() {
     console.log("submit button pressed");
-    fetch(`http://localhost:8081/lifeexpcalc/'${this.state.selectedCountry}'`, {
-      method: "GET",
-    })
-      .then(
-        (res) => {
-          return res.json();
-        },
-        (err) => {
-          console.log(err);
+    if (this.state.cache.has(this.state.selectedCountry)) {
+      console.log(this.state.selectedCountry + " is in the cache");
+      let avgLifeExpList = this.state.cache.get(this.state.selectedCountry);
+      console.log(typeof avgLifeExpList);
+      console.log(avgLifeExpList);
+
+      let labels = [];
+      let avgYears = [];
+      avgLifeExpList.forEach((elem) => {
+        labels.push(elem.year);
+        avgYears.push(elem.avg_life_expectancy);
+      });
+
+      this.setState({
+        isSubmitted: true,
+        labels: labels,
+        datasets: [
+          {
+            label: `${this.state.selectedCountry}`,
+            fill: false,
+            lineTension: 0.5,
+            backgroundColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(0,0,255,0.5)",
+            borderWidth: 2,
+            data: avgYears,
+          },
+        ],
+      });
+    } else {
+      fetch(
+        `http://localhost:8081/lifeexpcalc/'${this.state.selectedCountry}'`,
+        {
+          method: "GET",
         }
       )
-      .then(
-        (avgLifeExpList) => {
-          if (!avgLifeExpList) {
-            console.log("no results :(");
-            return;
+        .then(
+          (res) => {
+            return res.json();
+          },
+          (err) => {
+            console.log(err);
           }
-          console.log(typeof avgLifeExpList);
-          console.log(avgLifeExpList);
+        )
+        .then(
+          (avgLifeExpList) => {
+            if (!avgLifeExpList) {
+              console.log("no results :(");
+              return;
+            }
+            console.log(typeof avgLifeExpList);
+            console.log(avgLifeExpList);
 
-          let labels = [];
-          let avgYears = [];
-          avgLifeExpList.forEach((elem) => {
-            console.log(" in for each");
-            labels.push(elem.year);
-            avgYears.push(elem.avg_life_expectancy);
-          });
+            this.state.cache.set(this.state.selectedCountry, avgLifeExpList);
 
-          this.setState({
-            isSubmitted: true,
-            labels: labels,
-            datasets: [
-              {
-                label: `${this.state.selectedCountry}`,
-                fill: false,
-                lineTension: 0.5,
-                backgroundColor: "rgba(0,0,255,0.5)",
-                borderColor: "rgba(0,0,255,0.5)",
-                borderWidth: 2,
-                data: avgYears,
-              },
-            ],
-          });
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+            let labels = [];
+            let avgYears = [];
+            avgLifeExpList.forEach((elem) => {
+              labels.push(elem.year);
+              avgYears.push(elem.avg_life_expectancy);
+            });
+
+            this.setState({
+              isSubmitted: true,
+              labels: labels,
+              datasets: [
+                {
+                  label: `${this.state.selectedCountry}`,
+                  fill: false,
+                  lineTension: 0.5,
+                  backgroundColor: "rgba(0,0,255,0.5)",
+                  borderColor: "rgba(0,0,255,0.5)",
+                  borderWidth: 2,
+                  data: avgYears,
+                },
+              ],
+            });
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+    }
   }
 
   render() {
@@ -160,7 +166,7 @@ export default class LifeExpCalc extends React.Component {
               Please choose from the demographic categories and options below to
               calculate average life expectancy.
             </p>
-            
+
             <div className="input-container">
               <div className="dropdown-container">
                 <select
@@ -180,7 +186,7 @@ export default class LifeExpCalc extends React.Component {
                 </button>
               </div>
             </div>
-            <br/>
+            <br />
             <span>
               Results from
               <a
@@ -224,9 +230,9 @@ export default class LifeExpCalc extends React.Component {
             )}
           </div>
         </div>
-        <br/>
-        <br/>
-        <br/>
+        <br />
+        <br />
+        <br />
         <Footer></Footer>
       </div>
     );
