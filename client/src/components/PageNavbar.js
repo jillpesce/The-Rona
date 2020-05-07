@@ -77,6 +77,10 @@ export default class PageNavbar extends React.Component {
               <Link className="header-link" to={"/LifeExpCalc"}>
                 Life Expectancy Calculator
               </Link>
+
+              <Link className="header-link" to={"/Map"}>
+                Map
+              </Link>
             </div>
           </div>
         </nav>

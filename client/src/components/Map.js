@@ -1,11 +1,9 @@
 import React from 'react';
 import PageNavbar from './PageNavbar';
 import CorrelationRow from './CorrelationRow';
-import Footer from "./Footer";
 import CorrelationRow2 from './CorrelationRow2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/Correlation.css';
-import {Scatter} from 'react-chartjs-2';
 import Footer from './Footer';
 
 export default class Correlation extends React.Component {
@@ -28,6 +26,7 @@ export default class Correlation extends React.Component {
         this.submit = this.submit.bind(this);
 		this.handleCountryChange = this.handleCountryChange.bind(this);
 		this.handleCauseChange = this.handleCauseChange.bind(this);
+		// this.initViz();
 	}
     
     componentDidMount() {
@@ -207,6 +206,8 @@ export default class Correlation extends React.Component {
 		});
 	}
 
+	
+
 	render() {
 
 		return (
@@ -214,130 +215,67 @@ export default class Correlation extends React.Component {
 				<PageNavbar active="GlobalCauses" />
 
 				<div className="container globalcauses-container">
-			      <div className="jumbotron">
-			        <div className="h5">Correlation Analysis</div>
-					<p>Choose a country and a cause of death to analyze.</p>
-
-			        <div className="countries-container">
-			          <div className="dropdown-container">
-					  <select value={this.state.selectedCountry} onChange={this.handleCountryChange} className="dropdown" id="countriesDropdown">
-									{this.state.countries}
-								</select>
-								<select value={this.state.selectedCause} onChange={this.handleCauseChange} className="dropdown" id="causeDropdown">
-									{this.state.causes}
-								</select>
-			            <button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
-						<br/>
-						<br/>
-						<span>Cause of Death Data from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
-						<br/><span>Population Data from<a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank"> the United Nations Population Division, 2019</a></span>
-
-			          </div>
-			        </div>
-			      </div>
-				  {this.state.submittedCause !== "" && this.state.data && (
-				  <Scatter
-					data={this.state.graphState}
-					options={{
-						title:{
-						display:true,
-						text:'Population vs. ' + this.state.submittedCause + " in " +this.state.submittedCountry,
-						fontSize:20
-						},
-						legend:{
-							display:true,
-							position:'right'
-						},
-						scales: {
-							xAxes: [ {
-							display: true,
-							scaleLabel: {
-								display: true,
-								labelString: 'Population'
-							},
-							} ],
-							yAxes: [ {
-							display: true,
-							scaleLabel: {
-								display: true,
-								labelString: 'Number of deaths due to ' +this.state.submittedCause
-							}
-							} ]
-						},
-						tooltips: this.state.tooltips
-					}}
-					/>
-					
-				  )}
-
-				{this.state.submittedCause !== "" && this.state.data && (
-				  <Scatter
-					data={this.state.graphState2}
-					options={{
-						title:{
-						display:true,
-						text:'All Deaths vs. ' + this.state.submittedCause + " in " +this.state.submittedCountry,
-						fontSize:20
-						},
-						legend:{
-							display:true,
-							position:'right'
-						},
-						scales: {
-							xAxes: [ {
-							display: true,
-							scaleLabel: {
-								display: true,
-								labelString: 'All Deaths'
-							},
-							} ],
-							yAxes: [ {
-							display: true,
-							scaleLabel: {
-								display: true,
-								labelString: 'Number of deaths due to ' +this.state.submittedCause
-							}
-							} ]
-						},
-						tooltips: this.state.tooltips2
-					}}
-					/>
-					
-				  )}
-					{this.state.submittedCause !== "" && this.state.data && (
-					<div className="jumbotron">
-						<div className="globalcauses-container">
-						<div className="globalcauses-header">
-							<div className="header"><strong>Year</strong></div>
-							<div className="header"><strong>Country</strong></div>
-							<div className="header"><strong>Population</strong></div>
-							<div className="header"><strong>Cause</strong></div>
-							<div className="header"><strong>Number of Deaths</strong></div>
-						</div>
-						<div className="results-container" id="results">
-							{this.state.data}
-						</div>
-						</div>
+					<script type="text/javascript" src="https://prod-useast-a.online.tableau.com/javascripts/api/viz_v1.js"></script>
+					<div class="tableauPlaceholder" style={{width: '1000px', height: '750 px', backgroundColor: 'red'}}>
+						<object class="tableauViz" width="1000px" height="750px" display="none">
+							<param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+							<param name='embed_code_version' value='3' />
+							<param name='site_root' value='' />
+							<param name='name' value='CausesofDeath_15888742397720&#47;GlobalCausesofDeath' />
+							<param name='tabs' value='no' />
+							<param name='toolbar' value='yes' />
+							<param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ca&#47;CausesofDeath_15888742397720&#47;GlobalCausesofDeath&#47;1.png' /> 
+							<param name='animate_transition' value='yes' />
+							<param name='display_static_image' value='yes' />
+							<param name='display_spinner' value='yes' />
+							<param name='display_overlay' value='yes' />
+							<param name='display_count' value='yes' />
+							<param name='filter' value='publish=yes' />
+						</object>
 					</div>
-					)}
 
-					{this.state.submittedCause !== "" && this.state.data2 && (
-					<div className="jumbotron">
-						<div className="globalcauses-container">
-						<div className="globalcauses-header">
-							<div className="header"><strong>Year</strong></div>
-							<div className="header"><strong>Country</strong></div>
-							<div className="header"><strong>All Deaths</strong></div>
-							<div className="header"><strong>Cause</strong></div>
-							<div className="header"><strong>Number of Deaths</strong></div>
-						</div>
-						<div className="results-container" id="results">
-							{this.state.data2}
-						</div>
-						</div>
-					</div>
-					)}
+					<div class='tableauPlaceholder' id='viz1588874261935' style={{position:'relative'}}>
+						<noscript>
+							<a href='#'>
+								<img alt=' ' src='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ca&#47;CausesofDeath_15888742397720&#47;GlobalCausesofDeath&#47;1_rss.png'/>
+							</a>
+						</noscript>
+						<object class='tableauViz'  style={{display: 'none', height: '750 px', backgroundColor: 'red'}}>
+							<param name='host_url' value='https%3A%2F%2Fpublic.tableau.com%2F' />
+							<param name='embed_code_version' value='3' />
+							<param name='site_root' value='' />
+							<param name='name' value='CausesofDeath_15888742397720&#47;GlobalCausesofDeath' />
+							<param name='tabs' value='no' />
+							<param name='toolbar' value='yes' />
+							<param name='static_image' value='https:&#47;&#47;public.tableau.com&#47;static&#47;images&#47;Ca&#47;CausesofDeath_15888742397720&#47;GlobalCausesofDeath&#47;1.png' /> 
+							<param name='animate_transition' value='yes' />
+							<param name='display_static_image' value='yes' />
+							<param name='display_spinner' value='yes' />
+							<param name='display_overlay' value='yes' />
+							<param name='display_count' value='yes' />
+							<param name='filter' value='publish=yes' />
+						</object>
+
+						<script type='text/javascript'>
+							var divElement = document.getElementById('viz1588874261935');
+							var vizElement = divElement.getElementsByTagName('object')[0];
+							{/* if ( divElement.offsetWidth > 800 ) { 
+								vizElement.style.width='1000px';
+								vizElement.style.height='827px';
+							} else if ( divElement.offsetWidth > 500 ) { 
+								vizElement.style.width='1000px';
+								vizElement.style.height='827px';
+							} else { 
+								vizElement.style.width='100%';
+								vizElement.style.height='727px';
+							}                      */}
+							var scriptElement = document.createElement('script');
+							scriptElement.src = 'https://public.tableau.com/javascripts/api/viz_v1.js';
+							vizElement.parentNode.insertBefore(scriptElement, vizElement);
+						</script>
+						</div>                
 			    </div>
+				
 				<Footer></Footer>
 			</div>
 		);

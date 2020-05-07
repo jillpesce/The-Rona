@@ -222,11 +222,13 @@ function getGlobalCauseYears(req, res) {
   console.log("getting years");
   var query = `
         SELECT DISTINCT year FROM cause_of_death_globally
+        WHERE year <> "0"
     `;
   if (connection) {
     connection.query(query, function (err, rows, fields) {
       if (err) console.log(err);
       else {
+          console.log(rows);
         res.json(rows);
       }
     });
@@ -373,6 +375,37 @@ function getCorrelation(req, res) {
   }
 }
 
+function getCorrelation2(req, res) {
+    let country = req.params.country;
+    let cause = req.params.cause;
+    var query = `
+        WITH CauseByPopulation AS (
+            SELECT c.country, c.cause, c.year, c.num_deaths as num
+            FROM cause_of_death_globally c
+            WHERE c.country = "${country}"
+            AND c.cause = "${cause}"
+            AND c.num_deaths IS NOT NULL
+            AND c.num_deaths <> 0),
+        AllCauses AS (
+            SELECT c.country, c.year, SUM(c.num_deaths) as all_deaths
+            FROM cause_of_death_globally c
+            WHERE c.country = "${country}"
+            GROUP BY c.country, c.year)
+        SELECT * 
+        FROM AllCauses a
+        NATURAL JOIN CauseByPopulation b
+      `;
+    if (connection) {
+      connection.query(query, function (err, rows, fields) {
+        if (err) console.log(err);
+        else {
+            console.log(rows);
+          res.json(rows);
+        }
+      });
+    }
+  }
+
 // The exported functions, which can be accessed in index.js.
 module.exports = {
   coronaDataPerCountry: coronaDataPerCountry,
@@ -392,4 +425,5 @@ module.exports = {
   getLifeExpYears: getLifeExpYears,
   getAvgLifeExpectancy: getAvgLifeExpectancy,
   getCorrelation: getCorrelation,
+  getCorrelation2: getCorrelation2
 };

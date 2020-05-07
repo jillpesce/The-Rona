@@ -9,6 +9,7 @@ import GlobalCauses from "./GlobalCauses";
 import NationalCauses from "./NationalCauses";
 import LifeExpCalc from "./LifeExpCalc";
 import Correlation from "./Correlation";
+import Map from "./Map";
 
 const App = () => {
   const [isAuthenticated, setAuthenticated] = useState(false);
@@ -96,6 +97,12 @@ const App = () => {
             exact
             path="/LifeExpCalc"
             component={LifeExpCalc}
+          />
+
+          <Route path='/Map' component={() => { 
+              window.location.href = 'https://public.tableau.com/views/CausesofDeath_15888742397720/GlobalCausesofDeath?:display_count=y&publish=yes&:origin=viz_share_link'; 
+              return null;
+          }}/>
           />
         </Switch>
       </Router>
