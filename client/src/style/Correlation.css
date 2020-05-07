@@ -4,13 +4,13 @@
     margin-top: 10px;
   }
 
-.globalcauses-container .globalcauses-header, .results-container .correlationResults {
+.globalcauses-container .globalcauses-header, .results-container .correlationResults, .results-container .correlationResults2 {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
     height: 40px;
   }
 
-.header, .correlationResults .year, .correlationResults .country, .correlationResults .population, .correlationResults .cause, .correlationResults .num_deaths {
+.header, .correlationResults .year, .correlationResults .country, .correlationResults .population, .correlationResults .cause, .correlationResults .num_deaths, .correlationResults2 .year, .correlationResults2 .country, .correlationResults2 .all_deaths, .correlationResults2 .cause, .correlationResults2 .num_deaths {
     flex: 1 0 15%;
   }

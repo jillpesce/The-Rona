@@ -13,6 +13,7 @@ export default class GlobalCauses extends React.Component {
         
         this.state = {
 			selectedYear: "",
+			submittedYear: "",
 			countries: [],
 			years: [],
 			data: [],
@@ -55,6 +56,7 @@ export default class GlobalCauses extends React.Component {
 			);
             this.setState({
 				years: yearsDivs,
+				selectedYear: yearsList[0].year
             });
         }, err => {
             console.log(err);
@@ -79,6 +81,8 @@ export default class GlobalCauses extends React.Component {
 		}).then(globalCausesList => {
 			if (!globalCausesList) return;
 
+			this.state.submittedYear = this.state.selectedYear;
+
 			let GlobalDataDivs = globalCausesList.map((data, i) =>
 				<GlobalCauseRow key={i} 
 								cause={data.cause} 
@@ -100,8 +104,6 @@ export default class GlobalCauses extends React.Component {
 					  {
 						label: 'Number of deaths',
 						backgroundColor: 'rgba(75,192,192,1)',
-						borderColor: 'rgba(0,0,0,1)',
-						borderWidth: 2,
 						data: numDeaths
 					  }
 					]
@@ -129,10 +131,14 @@ export default class GlobalCauses extends React.Component {
 			            	{this.state.years}
 			            </select>
 			            <button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
+						<br/>
+								<br/>
+								<span>Results from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+
 			          </div>
 			        </div>
 			      </div>
-				  {this.state.selectedYear !== "" && this.state.data && (
+				  {this.state.submittedYear !== "" && this.state.data && (
 				  <Bar
 					data={this.state.graphState}
 					options={{
@@ -148,6 +154,8 @@ export default class GlobalCauses extends React.Component {
 					}}
 					/>
 				  )}
+				  
+				  {this.state.submittedYear !== "" && this.state.data && (
 			      <div className="jumbotron">
 			        <div className="globalcauses-container">
 			          <div className="globalcauses-header">
@@ -159,6 +167,7 @@ export default class GlobalCauses extends React.Component {
 			          </div>
 			        </div>
 			      </div>
+				  )}
 			    </div>
 				<Footer></Footer>
 			</div>

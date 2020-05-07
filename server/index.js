@@ -101,6 +101,8 @@ app.get("/timeline/population/:country", routes.getTimelinePop);
 
 app.get('/gcorrelation/:country/:cause', routes.getCorrelation);
 
+app.get('/gcorrelation2/:country/:cause', routes.getCorrelation2);
+
 app.listen(8081, () => {
   console.log(`Server listening on PORT 8081`);
 });

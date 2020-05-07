@@ -14,6 +14,7 @@ export default class NationalCauses extends React.Component {
         
         this.state = {
 			selectedYear: "",
+			submittedYear: "",
 			countries: [],
 			years: [],
 			data: [],
@@ -54,7 +55,8 @@ export default class NationalCauses extends React.Component {
             );
 
             this.setState({
-                years: yearsDivs,
+				years: yearsDivs,
+				selectedYear: yearsList[0].year
             });
         }, err => {
             console.log(err);
@@ -77,6 +79,7 @@ export default class NationalCauses extends React.Component {
 			console.log(err);
 		}).then(globalCausesList => {
 			if (!globalCausesList) return;
+			this.state.submittedYear = this.state.selectedYear
 
 			let GlobalDataDivs = globalCausesList.map((data, i) =>
 				<GlobalCauseRow key={i} 
@@ -138,11 +141,16 @@ export default class NationalCauses extends React.Component {
 			            	{this.state.years}
 			            </select>
 			            <button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
+
+						<br/>
+						<br/>
+						<span>Results from<a href="https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu" target="_blank"> the Centers for Disease Control and Prevention, 2019</a></span>
+
 			          </div>
 			        </div>
 			      </div>
 
-				  {this.state.selectedYear !== "" && this.state.data && (
+				  {this.state.submittedYear !== "" && this.state.data && (
 				  <Bar
 					data={this.state.graphState}
 					options={{
@@ -159,7 +167,7 @@ export default class NationalCauses extends React.Component {
 					/>
 				  )}
 
-					{this.state.selectedYear !== "" && this.state.data && (
+					{this.state.submittedYear !== "" && this.state.data && (
 					<Doughnut
 						data={this.state.graphState}
 						options={{
@@ -175,7 +183,7 @@ export default class NationalCauses extends React.Component {
 						}}
 					/>
 					)}
-
+				{this.state.submittedYear !== "" && this.state.data && (
 			      <div className="jumbotron">
 			        <div className="globalcauses-container">
 			          <div className="globalcauses-header">
@@ -187,7 +195,9 @@ export default class NationalCauses extends React.Component {
 			          </div>
 			        </div>
 			      </div>
-			    </div>
+				  )}
+				</div>
+				
 				<Footer></Footer>
 			</div>
 		);
