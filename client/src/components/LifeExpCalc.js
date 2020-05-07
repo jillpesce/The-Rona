@@ -3,30 +3,28 @@ import PageNavbar from "./PageNavbar";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../style/LifeExpCalc.css";
 import "../style/Timeline.css";
+import { Line } from "react-chartjs-2";
 
 export default class LifeExpCalc extends React.Component {
   constructor(props) {
     super(props);
+    this.chartReference = React.createRef();
 
     this.state = {
-      selectedRace: "",
-      selectedSex: "",
-      selectedYear: "",
-      races: [],
-      sexes: [],
-      years: [],
-      avgYears: undefined,
+      selectedCountry: "",
+      countries: [],
+      //years: [],
+      data: [],
+      labels: [],
       isSubmitted: false,
     };
 
     this.submit = this.submit.bind(this);
-    this.handleRace = this.handleRace.bind(this);
-    this.handleSex = this.handleSex.bind(this);
-    this.handleYear = this.handleYear.bind(this);
+    this.handleCountry = this.handleCountry.bind(this);
   }
 
   componentDidMount() {
-    fetch("http://localhost:8081/lecraces", {
+    fetch("http://localhost:8081/leccountries", {
       method: "GET",
     })
       .then(
@@ -38,119 +36,69 @@ export default class LifeExpCalc extends React.Component {
         }
       )
       .then(
-        (racesList) => {
-          if (!racesList) return;
+        (countriesList) => {
+          if (!countriesList) return;
 
-          console.log(typeof racesList);
-          console.log(racesList);
+          console.log(typeof countriesList);
+          console.log(countriesList);
 
-          let racesDivs = racesList.map((race, i) => (
-            <option key={i} value={race.race}>
-              {race.race}
+          let countriesDivs = countriesList.map((country, i) => (
+            <option key={i} value={country.country}>
+              {country.country}
             </option>
           ));
 
           this.setState({
-            races: racesDivs,
-            selectedRace: racesList[0].race,
+            countries: countriesDivs,
+            selectedCountry: countriesList[0].country,
           });
         },
         (err) => {
           console.log(err);
         }
       );
-    fetch("http://localhost:8081/lecsexes", {
-      method: "GET",
-    })
-      .then(
-        (res) => {
-          return res.json();
-        },
-        (err) => {
-          console.log(err);
-        }
-      )
-      .then(
-        (sexesList) => {
-          if (!sexesList) return;
+    // fetch("http://localhost:8081/lecyears", {
+    //   method: "GET",
+    // })
+    //   .then(
+    //     (res) => {
+    //       return res.json();
+    //     },
+    //     (err) => {
+    //       console.log(err);
+    //     }
+    //   )
+    //   .then(
+    //     (yearsList) => {
+    //       if (!yearsList) return;
 
-          let sexesDivs = sexesList.map((sex, i) => (
-            <option key={i} value={sex.sex}>
-              {sex.sex}
-            </option>
-          ));
+    //       let yearsDivs = yearsList.map((year, i) => (
+    //         <option key={i} value={year.year}>
+    //           {year.year}
+    //         </option>
+    //       ));
 
-          this.setState({
-            sexes: sexesDivs,
-            selectedSex: sexesList[0].sex,
-          });
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
-    fetch("http://localhost:8081/lecyears", {
-      method: "GET",
-    })
-      .then(
-        (res) => {
-          return res.json();
-        },
-        (err) => {
-          console.log(err);
-        }
-      )
-      .then(
-        (yearsList) => {
-          if (!yearsList) return;
-
-          let yearsDivs = yearsList.map((year, i) => (
-            <option key={i} value={year.year}>
-              {year.year}
-            </option>
-          ));
-
-          this.setState({
-            years: yearsDivs,
-            selectedYear: yearsList[0].year,
-          });
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+    //       this.setState({
+    //         years: yearsDivs,
+    //       });
+    //     },
+    //     (err) => {
+    //       console.log(err);
+    //     }
+    //   );
   }
 
-  handleRace(e) {
+  handleCountry(e) {
     this.setState({
-      selectedRace: e.target.value,
-    });
-  }
-
-  handleSex(e) {
-    this.setState({
-      selectedSex: e.target.value,
-    });
-  }
-
-  handleYear(e) {
-    this.setState({
-      selectedYear: e.target.value,
+      selectedCountry: e.target.value,
     });
   }
 
   submit() {
     console.log("submit button pressed");
-    fetch(
-      `http://localhost:8081/lifeexpcalc/${encodeURIComponent(
-        this.state.selectedRace
-      )}/${encodeURIComponent(this.state.selectedSex)}/${encodeURIComponent(
-        this.state.selectedYear
-      )}`,
-      {
-        method: "GET",
-      }
-    )
+    fetch(`http://localhost:8081/lifeexpcalc/'${this.state.selectedCountry}'`, {
+      method: "GET",
+    })
       .then(
         (res) => {
           return res.json();
@@ -160,15 +108,36 @@ export default class LifeExpCalc extends React.Component {
         }
       )
       .then(
-        (avgLifeExp) => {
-          if (!avgLifeExp) return;
+        (avgLifeExpList) => {
+          if (!avgLifeExpList) {
+            console.log("no results :(");
+            return;
+          }
+          console.log(typeof avgLifeExpList);
+          console.log(avgLifeExpList);
 
-          console.log(typeof avgLifeExp);
-          console.log(avgLifeExp[0].avg_life_expectancy);
+          let labels = [];
+          let avgYears = [];
+          avgLifeExpList.forEach((elem) => {
+            console.log(" in for each");
+            labels.push(elem.year);
+            avgYears.push(elem.avg_life_expectancy);
+          });
 
           this.setState({
-            avgYears: avgLifeExp[0].avg_life_expectancy.toLocaleString(),
             isSubmitted: true,
+            labels: labels,
+            datasets: [
+              {
+                label: `${this.state.selectedCountry}`,
+                fill: false,
+                lineTension: 0.5,
+                backgroundColor: "rgba(0,0,255,0.5)",
+                borderColor: "rgba(0,0,255,0.5)",
+                borderWidth: 2,
+                data: avgYears,
+              },
+            ],
           });
         },
         (err) => {
@@ -189,31 +158,25 @@ export default class LifeExpCalc extends React.Component {
               Please choose from the demographic categories and options below to
               calculate average life expectancy.
             </p>
+            <span>
+              Results from
+              <a
+                href="https://ourworldindata.org/life-expectancy"
+                target="_blank"
+              >
+                {" "}
+                Our World in Data, 2020
+              </a>
+            </span>
             <div className="input-container">
               <div className="dropdown-container">
                 <select
-                  value={this.state.selectedRace}
-                  onChange={this.handleRace}
+                  value={this.state.selectedCountry}
+                  onChange={this.handleCountry}
                   className="dropdown"
-                  id="racesDropdown"
+                  id="countriesDropdown"
                 >
-                  {this.state.races}
-                </select>
-                <select
-                  value={this.state.selectedSex}
-                  onChange={this.handleSex}
-                  className="dropdown"
-                  id="sexesDropdown"
-                >
-                  {this.state.sexes}
-                </select>
-                <select
-                  value={this.state.selectedYear}
-                  onChange={this.handleYear}
-                  className="dropdown"
-                  id="yearsDropdown"
-                >
-                  {this.state.years}
+                  {this.state.countries}
                 </select>
                 <button
                   className="submit-btn"
@@ -225,13 +188,37 @@ export default class LifeExpCalc extends React.Component {
               </div>
             </div>
           </div>
-
-          {this.state.isSubmitted && (
-            <div className="avg-life-exp-container">
-              <div className="years">{this.state.avgYears}</div>
-              <p className="years-label">Years</p>
-            </div>
-          )}
+          <div>
+            {this.state.isSubmitted && (
+              <Line
+                ref={this.chartReference}
+                data={this.state}
+                options={{
+                  title: {
+                    display: true,
+                    text: this.state.selectedCountry + `'s Life Expectancy`,
+                    fontSize: 20,
+                  },
+                  height: 50,
+                  width: 50,
+                  legend: {
+                    display: true,
+                    position: "right",
+                  },
+                  scales: {
+                    xAxes: [
+                      {
+                        ticks: {
+                          autoSkip: true,
+                          maxTicksLimit: 20,
+                        },
+                      },
+                    ],
+                  },
+                }}
+              />
+            )}
+          </div>
         </div>
       </div>
     );

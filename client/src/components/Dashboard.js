@@ -13,12 +13,6 @@ export default class Dashboard extends React.Component {
     super(props);
   }
 
-  // routeChangeCorona = () => {
-  //   let path = "http://localhost:3000/coronavirus";
-  //   let history = useHistory();
-  //   history.push(path);
-  // };
-
   render() {
     return (
       <div>
@@ -28,7 +22,7 @@ export default class Dashboard extends React.Component {
           <h1>Welcome!</h1>
           <br></br>
           <CardDeck>
-            <Card className="text-center" border="success">
+            <Card className="text-center" border="primary">
               <Card.Header>Coronavirus</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -53,7 +47,7 @@ export default class Dashboard extends React.Component {
                 </Button>
               </Card.Body>
             </Card>
-            <Card className="text-center" border="primary">
+            <Card className="text-center" border="success">
               <Card.Header>National Causes</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -69,7 +63,7 @@ export default class Dashboard extends React.Component {
         </div>
         <div className="dashboard-container">
           <CardDeck>
-            <Card className="text-center" border="warning">
+            <Card className="text-center" border="info">
               <Card.Header>Global Causes</Card.Header>
               <Card.Body>
                 <Card.Text>
@@ -81,12 +75,24 @@ export default class Dashboard extends React.Component {
                 </Button>
               </Card.Body>
             </Card>
-            <Card className="text-center" border="info">
+            <Card className="text-center" border="warning">
+              <Card.Header>Population vs. Cause of Death</Card.Header>
+              <Card.Body>
+                <Card.Text>
+                  Compare population changes and causes of death for specific
+                  countries.
+                </Card.Text>
+                <Button variant="outline-primary">
+                  <Link to={"/LifeExpCalc"}>See page</Link>
+                </Button>
+              </Card.Body>
+            </Card>
+            <Card className="text-center" border="primary">
               <Card.Header>Life Expectancy Calculator</Card.Header>
               <Card.Body>
                 <Card.Text>
-                  Calculate the life expectancy for certain demographic
-                  categories.
+                  See how life expectancy has changed over the course of the las
+                  century.
                 </Card.Text>
                 <Button variant="outline-primary">
                   <Link to={"/LifeExpCalc"}>See page</Link>

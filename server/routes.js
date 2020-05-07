@@ -289,24 +289,9 @@ function getTopNationalCauses(req, res) {
   }
 }
 
-function getLifeExpRaces(req, res) {
+function getLifeExpCountries(req, res) {
   var query = `
-        SELECT DISTINCT race
-        FROM life_expectancy;
-    `;
-  if (connection) {
-    connection.query(query, function (err, rows, fields) {
-      if (err) console.log(err);
-      else {
-        res.json(rows);
-      }
-    });
-  }
-}
-
-function getLifeExpSexes(req, res) {
-  var query = `
-          SELECT DISTINCT sex
+          SELECT DISTINCT country
           FROM life_expectancy;
       `;
   if (connection) {
@@ -335,20 +320,18 @@ function getLifeExpYears(req, res) {
 }
 
 function getAvgLifeExpectancy(req, res) {
-  let race = req.params.race;
-  let sex = req.params.sex;
-  let year = req.params.year;
+  let country = req.params.country;
+  console.log(country);
   var query = `
-        SELECT avg_life_expectancy
+        SELECT avg_life_expectancy, year
         FROM life_expectancy
-        WHERE race = "${race}" 
-        AND sex = "${sex}" 
-        AND year = "${year}";
+        WHERE country = ${country};
     `;
   if (connection) {
     connection.query(query, function (err, rows, fields) {
       if (err) console.log(err);
       else {
+        console.log("returning rows " + rows.length);
         res.json(rows);
       }
     });
@@ -405,8 +388,7 @@ module.exports = {
   getTopGlobalCauses: getTopGlobalCauses,
   getNationalCauseYears: getNationalCauseYears,
   getTopNationalCauses: getTopNationalCauses,
-  getLifeExpRaces: getLifeExpRaces,
-  getLifeExpSexes: getLifeExpSexes,
+  getLifeExpCountries: getLifeExpCountries,
   getLifeExpYears: getLifeExpYears,
   getAvgLifeExpectancy: getAvgLifeExpectancy,
   getCorrelation: getCorrelation,
