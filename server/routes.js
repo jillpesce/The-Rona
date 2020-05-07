@@ -31,10 +31,7 @@ function getCoronaVirusCountries(req, res) {
 }
 
 function coronaDataPerCountry(req, res) {
-  console.log("coronaData api hit");
   let inputCountry = req.params.country;
-  console.log(inputCountry);
-
   let query = `
         WITH country(confirmed, recovered, deaths, date_checked) AS (
             SELECT confirmed, recovered, deaths, date_checked
@@ -69,7 +66,6 @@ function getMostRecentGlobalStatistics(req, res) {
         GROUP BY date_checked
         ORDER BY STR_TO_DATE(date_checked, '%m/%d/%y') DESC LIMIT 1;
     `;
-  // let query = 'SELECT * FROM coronavirus;';
 
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
@@ -81,8 +77,6 @@ function getMostRecentGlobalStatistics(req, res) {
 
 function getCoronaVsOtherCauses(req, res) {
   let inputCountry = req.params.country;
-  console.log(inputCountry);
-
   let query = `
         WITH TotalCorona AS (
             SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, c.deaths as num
@@ -219,7 +213,6 @@ function getAvgNumDeaths(req, res) {
 }
 
 function getGlobalCauseYears(req, res) {
-  console.log("getting years");
   var query = `
         SELECT DISTINCT year FROM cause_of_death_globally
         WHERE year <> "0"
@@ -228,7 +221,6 @@ function getGlobalCauseYears(req, res) {
     connection.query(query, function (err, rows, fields) {
       if (err) console.log(err);
       else {
-          console.log(rows);
         res.json(rows);
       }
     });
@@ -256,7 +248,6 @@ function getTopGlobalCauses(req, res) {
 }
 
 function getNationalCauseYears(req, res) {
-  console.log("getting national years");
   var query = `
         SELECT DISTINCT year FROM cause_of_death_nationally
     `;
@@ -264,7 +255,6 @@ function getNationalCauseYears(req, res) {
     connection.query(query, function (err, rows, fields) {
       if (err) console.log(err);
       else {
-        console.log(rows);
         res.json(rows);
       }
     });
@@ -323,7 +313,6 @@ function getLifeExpYears(req, res) {
 
 function getAvgLifeExpectancy(req, res) {
   let country = req.params.country;
-  console.log(country);
   var query = `
         SELECT avg_life_expectancy, year
         FROM life_expectancy
@@ -333,7 +322,6 @@ function getAvgLifeExpectancy(req, res) {
     connection.query(query, function (err, rows, fields) {
       if (err) console.log(err);
       else {
-        console.log("returning rows " + rows.length);
         res.json(rows);
       }
     });
@@ -399,7 +387,6 @@ function getCorrelation2(req, res) {
       connection.query(query, function (err, rows, fields) {
         if (err) console.log(err);
         else {
-            console.log(rows);
           res.json(rows);
         }
       });

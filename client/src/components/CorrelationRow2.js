@@ -7,7 +7,6 @@ export default class CorrelationRow2 extends React.Component {
 	}
 
 	render() {
-		console.log(this.props);
 		return (
 			<div className="correlationResults2">
 				<div className="year">{this.props.year}</div>

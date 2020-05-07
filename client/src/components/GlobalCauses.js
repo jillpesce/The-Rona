@@ -17,7 +17,6 @@ export default class GlobalCauses extends React.Component {
 			countries: [],
 			years: [],
 			data: [],
-			// labels: [],
 			causeDeaths: [],
 
 			// init data
@@ -40,7 +39,6 @@ export default class GlobalCauses extends React.Component {
 	}
     
     componentDidMount() {
-		console.log("got here")
 		fetch("http://localhost:8081/gyears", 
         {
             method: 'GET'
@@ -70,8 +68,6 @@ export default class GlobalCauses extends React.Component {
 	}
     
     submit() {
-		console.log('submit button pressed');
-		// fetch(`http://localhost:8081/globalcauses/'${this.state.selectedYear}'`, {
 		fetch(`http://localhost:8081/globalcauses/${encodeURIComponent(this.state.selectedYear)}`, {
 			method: 'GET',
 		}).then(res => {

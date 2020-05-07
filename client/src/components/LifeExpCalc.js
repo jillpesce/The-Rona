@@ -160,16 +160,7 @@ export default class LifeExpCalc extends React.Component {
               Please choose from the demographic categories and options below to
               calculate average life expectancy.
             </p>
-            <span>
-              Results from
-              <a
-                href="https://ourworldindata.org/life-expectancy"
-                target="_blank"
-              >
-                {" "}
-                Our World in Data, 2020
-              </a>
-            </span>
+            
             <div className="input-container">
               <div className="dropdown-container">
                 <select
@@ -189,6 +180,17 @@ export default class LifeExpCalc extends React.Component {
                 </button>
               </div>
             </div>
+            <br/>
+            <span>
+              Results from
+              <a
+                href="https://ourworldindata.org/life-expectancy"
+                target="_blank"
+              >
+                {" "}
+                Our World in Data, 2020
+              </a>
+            </span>
           </div>
           <div>
             {this.state.isSubmitted && (
@@ -222,6 +224,9 @@ export default class LifeExpCalc extends React.Component {
             )}
           </div>
         </div>
+        <br/>
+        <br/>
+        <br/>
         <Footer></Footer>
       </div>
     );

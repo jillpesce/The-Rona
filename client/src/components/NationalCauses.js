@@ -39,7 +39,6 @@ export default class NationalCauses extends React.Component {
 	}
     
     componentDidMount() {
-		console.log("got here")
 		fetch("http://localhost:8081/nyears", 
         {
             method: 'GET'
@@ -70,7 +69,6 @@ export default class NationalCauses extends React.Component {
 	}
     
     submit() {
-		console.log('submit button pressed');
 		fetch(`http://localhost:8081/nationalcauses/${encodeURIComponent(this.state.selectedYear)}`, {
 			method: 'GET',
 		}).then(res => {

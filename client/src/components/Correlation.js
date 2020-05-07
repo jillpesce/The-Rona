@@ -6,7 +6,7 @@ import CorrelationRow2 from './CorrelationRow2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/Correlation.css';
 import {Scatter} from 'react-chartjs-2';
-import Footer from './Footer';
+
 
 export default class Correlation extends React.Component {
 	constructor(props) {
@@ -91,7 +91,6 @@ export default class Correlation extends React.Component {
 	}
     
     submit() {
-		console.log('submit button pressed');
 		fetch(`http://localhost:8081/gcorrelation/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
 			method: 'GET',
 		}).then(res => {
@@ -147,8 +146,6 @@ export default class Correlation extends React.Component {
 		}, err => {
 			console.log(err);
 		});
-
-		console.log("fetching second set of data");
 
 		fetch(`http://localhost:8081/gcorrelation2/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
 			method: 'GET',

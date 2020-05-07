@@ -9,12 +9,9 @@ router.get('/google', passport.authenticate('google', {
     scope: ['profile', 'email']
 }));
 
-// 
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: "/", session: true }),
     function(req, res) {
         var token = req.user.token;
-        // res.redirect("http://localhost:3000/");
-        // change 
         res.redirect("http://localhost:3000/");
     }
 );

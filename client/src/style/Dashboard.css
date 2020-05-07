@@ -1,5 +1,4 @@
 .dashboard-container {
-  /* margin: 10px 0; */
   display: flex;
   justify-content: center;
   flex-direction: column;
@@ -8,5 +7,4 @@
   padding-left: 20px;
   padding-top: 10px;
   padding-bottom: 10px;
-  /* border-bottom: 1px solid #ddd; */
 }

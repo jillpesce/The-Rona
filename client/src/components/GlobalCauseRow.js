@@ -7,7 +7,6 @@ export default class GlobalCauseRow extends React.Component {
 	}
 
 	render() {
-		console.log(this.props);
 		return (
 			<div className="globalCauseResults">
 				<div className="cause">{this.props.cause}</div>

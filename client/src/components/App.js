@@ -27,22 +27,18 @@ const App = () => {
 
       const data = await res.json();
 
-      console.log("res.data: " + data);
       if (data.isAuthenticated) {
         setAuthenticated(true);
-        console.log("set auth true");
       } else {
         setAuthenticated(false);
-        console.log("set auth false");
       }
     } catch (err) {
       console.error(err.message);
     }
   }, []);
 
-  console.log("App isauthenticated = " + isAuthenticated);
   return (
-    <div className="App" style={{position: 'absolute', minHeight: '100vh'}}>
+    <div className="App" style={{position: 'absolute', minHeight: '100vh', width: '100%'}}>
       <Router>
         <Switch>
           <Route

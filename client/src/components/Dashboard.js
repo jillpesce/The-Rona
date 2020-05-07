@@ -11,7 +11,6 @@ import { Link } from "react-router-dom";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
-    // this.routeChangeCorona = this.routeChangeCorona.bind(this);
     super(props);
   }
 

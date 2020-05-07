@@ -240,7 +240,8 @@ export default class Timeline extends React.Component {
 								<button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
 								<br/>
 								<br/>
-								<span>Results from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+								<span>Cause of Death Data from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+								<br/><span>Population Data from<a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank"> the United Nations Population Division, 2019</a></span>
 
 							</div>
 						</div>

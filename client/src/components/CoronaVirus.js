@@ -38,20 +38,6 @@ export default class CoronaVirus extends React.Component {
       },
     };
 
-    // const stateTwo = {
-    // 	labels: ['January', 'February', 'March',
-    // 			 'April', 'May'],
-    // 	datasets: [
-    // 	  {
-    // 		label: 'Rainfall',
-    // 		backgroundColor: 'rgba(75,192,192,1)',
-    // 		borderColor: 'rgba(0,0,0,1)',
-    // 		borderWidth: 2,
-    // 		data: [65, 59, 80, 81, 56]
-    // 	  }
-    // 	]
-    //   }
-
     this.submitCountry = this.submitCountry.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }
@@ -319,6 +305,8 @@ export default class CoronaVirus extends React.Component {
                 </button>
               </div>
             </div>
+            <br/><span>Results from<a href="https://www.kaggle.com/imdevskp/corona-virus-report://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank"> COVID-19 Dataset, 2019</a></span>
+
           </div>
           <div>
             {this.state.selectedCountry !== "" && this.state.datasets && (
