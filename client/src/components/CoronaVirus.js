@@ -39,10 +39,6 @@ export default class CoronaVirus extends React.Component {
       },
     };
 
-<<<<<<< HEAD
-=======
-
->>>>>>> c9fbe5ce1b8d4cee0c51e7aa6f3c75041004afcf
     this.submitCountry = this.submitCountry.bind(this);
     this.handleChange = this.handleChange.bind(this);
   }

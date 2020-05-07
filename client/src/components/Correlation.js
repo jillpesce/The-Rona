@@ -6,10 +6,6 @@ import CorrelationRow2 from './CorrelationRow2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/Correlation.css';
 import {Scatter} from 'react-chartjs-2';
-<<<<<<< HEAD
-
-=======
->>>>>>> c9fbe5ce1b8d4cee0c51e7aa6f3c75041004afcf
 
 export default class Correlation extends React.Component {
 	constructor(props) {
