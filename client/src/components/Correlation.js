@@ -98,24 +98,24 @@ export default class Correlation extends React.Component {
 		if (this.state.cache.has(this.state.selectedCountry + this.state.selectedCause)) {
 			let correlationList = this.state.cache.get(this.state.selectedCountry + this.state.submittedCause);
 			this.setGraph(correlationList);
+		} else {
+			fetch(`http://localhost:8081/gcorrelation/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.submittedCause)}`, {
+				method: 'GET',
+			}).then(res => {
+				return res.json();
+			}, err => {
+				console.log(err);
+			}).then(correlationList => {
+
+				this.state.cache.set(this.state.selectedCountry + this.state.selectedCause, correlationList);
+
+				this.setGraph(correlationList);
+
+			}, err => {
+				console.log(err);
+			});
 		}
-		fetch(`http://localhost:8081/gcorrelation/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.submittedCause)}`, {
-			method: 'GET',
-		}).then(res => {
-			return res.json();
-		}, err => {
-			console.log(err);
-		}).then(correlationList => {
-
-			this.state.cache.set(this.state.selectedCountry + this.state.selectedCause, correlationList);
-
-			this.setGraph(correlationList);
-
-		}, err => {
-			console.log(err);
-		});
-
-		fetch(`http://localhost:8081/gcorrelation2/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
+		fetch(`http://localhost:8081/gcorrelation2/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.submittedCause)}`, {
 			method: 'GET',
 		}).then(res => {
 			return res.json();
@@ -133,17 +133,17 @@ export default class Correlation extends React.Component {
 					country={data.country}
 					cause={data.cause}
 					all_deaths={data.all_deaths}
-					num_deaths={data.num}/>)
+					num_deaths={data.num} />)
 				var temp = [correlationList2[i]];
 				correlationList2 = temp;
 			} else {
 				CorrelationDivs2 = correlationList2.map((data, i) =>
-				<CorrelationRow2 key={i}
-								year={data.year}
-								country={data.country}
-								cause={data.cause}
-								all_deaths={data.all_deaths}
-								num_deaths={data.num}/>
+					<CorrelationRow2 key={i}
+						year={data.year}
+						country={data.country}
+						cause={data.cause}
+						all_deaths={data.all_deaths}
+						num_deaths={data.num} />
 				);
 				CorrelationDivs2.pop();
 				correlationList2.pop();
@@ -232,6 +232,7 @@ export default class Correlation extends React.Component {
 			}
 		});
 	}
+
 	render() {
 
 		return (
