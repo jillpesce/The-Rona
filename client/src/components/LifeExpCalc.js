@@ -69,12 +69,8 @@ export default class LifeExpCalc extends React.Component {
   }
 
   submit() {
-    console.log("submit button pressed");
     if (this.state.cache.has(this.state.selectedCountry)) {
-      console.log(this.state.selectedCountry + " is in the cache");
       let avgLifeExpList = this.state.cache.get(this.state.selectedCountry);
-      console.log(typeof avgLifeExpList);
-      console.log(avgLifeExpList);
 
       let labels = [];
       let avgYears = [];

@@ -10,22 +10,26 @@ router.get('/google', passport.authenticate('google', {
 }));
 
 router.get('/google/callback', passport.authenticate('google', { failureRedirect: "/", session: true }),
-    function(req, res) {
-        var token = req.user.token;
-        res.redirect("http://localhost:3000/");
+    function (req, res) {
+        try {
+            var token = req.user.token;
+            res.redirect("http://localhost:3000/");
+        } catch (err) {
+            console.error(err.message);
+        }
     }
 );
 
 // Used after auth to get the user object
 router.get('/login/success', async (req, res) => {
     try {
-      if (req.user) {
-        res.json({ isAuthenticated: true });
-      } else {
-        res.json({ isAuthenticated: false }).status(401).send('Not Authorized');
-      }
+        if (req.user) {
+            res.json({ isAuthenticated: true });
+        } else {
+            res.json({ isAuthenticated: false }).status(401).send('Not Authorized');
+        }
     } catch (err) {
-        console.error(err.message);
+        //console.error(err.message);
         res.status(500).send("Server Error");
     }
 });

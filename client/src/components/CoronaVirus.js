@@ -109,7 +109,6 @@ export default class CoronaVirus extends React.Component {
   }
 
   submitCountry() {
-    console.log("submit button pressed");
     if (this.state.cache.has(this.state.selectedCountry)) {
       console.log(this.state.selectedCountry + "is in the cache");
       let coronaDataList = this.state.cache.get(this.state.selectedCountry);
