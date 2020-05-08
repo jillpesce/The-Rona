@@ -378,8 +378,8 @@ function getCorrelation2(req, res) {
     let country = req.params.country;
     let cause = req.params.cause;
     var pre_query = new Date().getTime();
+    console.log("submitted cause was: " +cause);
     var query = `
-
     WITH TotalCorona AS (
         SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, 2020 as year, SUM(c.deaths) as num, SUM(c.deaths) as all_deaths
         FROM coronavirus c
@@ -393,7 +393,7 @@ function getCorrelation2(req, res) {
         AND c.num_deaths IS NOT NULL
         AND c.num_deaths <> 0),
     AllCauses AS (
-        SELECT c.country, c.cause, c.year, SUM(num_deaths) as all_deaths
+        SELECT c.country, c.year, SUM(num_deaths) as all_deaths
         FROM 
         cause_of_death_globally c
         WHERE c.country = "${country}"
