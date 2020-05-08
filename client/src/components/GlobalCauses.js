@@ -144,7 +144,7 @@ export default class GlobalCauses extends React.Component {
 						fontSize:20
 						},
 						legend:{
-						display:true,
+						display:false,
 						position:'right'
 						}
 					}}

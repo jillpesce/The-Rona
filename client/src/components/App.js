@@ -96,7 +96,7 @@ const App = () => {
           />
 
           <Route path='/Map' component={() => { 
-              window.location.href = 'https://public.tableau.com/views/CausesofDeath_15888742397720/GlobalCausesofDeath?:display_count=y&publish=yes&:origin=viz_share_link'; 
+              window.location.href = 'https://public.tableau.com/profile/selina.nie#!/vizhome/CausesofDeath_15888742397720/Sheet1'; 
               return null;
           }}/>
           />

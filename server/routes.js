@@ -378,8 +378,9 @@ function getCorrelation2(req, res) {
     let country = req.params.country;
     let cause = req.params.cause;
     var pre_query = new Date().getTime();
-    console.log("submitted cause was: " +cause);
     var query = `
+    CREATE INDEX causes_country ON cause_of_death_globally(country)
+
     WITH TotalCorona AS (
         SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, 2020 as year, SUM(c.deaths) as num, SUM(c.deaths) as all_deaths
         FROM coronavirus c
@@ -419,7 +420,6 @@ function getCorrelation2(req, res) {
           var post_query = new Date().getTime();
           var duration = (post_query - pre_query) / 1000;
           console.log("correlation data 2 took: " +duration);
-          console.log(rows);
           res.json(rows);
         }
       });

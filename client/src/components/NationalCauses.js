@@ -158,7 +158,7 @@ export default class NationalCauses extends React.Component {
 						fontSize:20
 						},
 						legend:{
-						display:true,
+						display:false,
 						position:'right'
 						}
 					}}
@@ -175,7 +175,7 @@ export default class NationalCauses extends React.Component {
 							fontSize:20
 							},
 							legend:{
-							display:true,
+							display:false,
 							position:'right'
 							}
 						}}
