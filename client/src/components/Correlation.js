@@ -68,6 +68,8 @@ export default class Correlation extends React.Component {
 					<option key={i} value={cause.cause}>{cause.cause}</option>
 				);
 
+				causesDivs.push(<option key={causesDivs.length} value="COVID-19">COVID-19</option>);
+
 				this.setState({
 					causes: causesDivs,
 					selectedCause: causesList[0].cause,
@@ -90,15 +92,16 @@ export default class Correlation extends React.Component {
 	}
     
     submit() {
-		fetch(`http://localhost:8081/gcorrelation/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
+		this.state.submittedCause = this.state.selectedCause;
+		this.state.submittedCountry = this.state.selectedCountry;
+
+		fetch(`http://localhost:8081/gcorrelation/${encodeURIComponent(this.state.submittedCountry)}/${encodeURIComponent(this.state.submittedCause)}`, {
 			method: 'GET',
 		}).then(res => {
 			return res.json();
 		}, err => {
 			console.log(err);
 		}).then(correlationList => {
-			this.state.submittedCause = this.state.selectedCause;
-			this.state.submittedCountry = this.state.selectedCountry;
 			if (!correlationList) return;
 
 			let CorrelationDivs = correlationList.map((data, i) =>
@@ -153,21 +156,36 @@ export default class Correlation extends React.Component {
 		}, err => {
 			console.log(err);
 		}).then(correlationList2 => {
-			this.state.submittedCause = this.state.selectedCause;
-			this.state.submittedCountry = this.state.selectedCountry;
 			if (!correlationList2) return;
+			let CorrelationDivs2 = [];
 
-			let CorrelationDivs2 = correlationList2.map((data, i) =>
+			if (this.state.submittedCause == "COVID-19") {
+				var i = correlationList2.length - 1;
+				var data = correlationList2[i];
+				CorrelationDivs2.push(<CorrelationRow2 key={i} 
+					year={data.year}
+					country={data.country} 
+					cause={data.cause} 
+					all_deaths={data.all_deaths} 
+					num_deaths={data.num}/>)
+				var temp = [correlationList2[i]];
+				correlationList2 = temp;
+			} else {
+				CorrelationDivs2 = correlationList2.map((data, i) =>
 				<CorrelationRow2 key={i} 
 								year={data.year}
 								country={data.country} 
 								cause={data.cause} 
 								all_deaths={data.all_deaths} 
 								num_deaths={data.num}/>
-			);
+				);
+				CorrelationDivs2.pop();
+				correlationList2.pop();
+			}
 
 			let labels2 = [];
 			let points2 = [];
+
 			correlationList2.forEach(elem => {
 				labels2.push(elem.year)
 				points2.push({

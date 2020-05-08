@@ -32,6 +32,7 @@ function getCoronaVirusCountries(req, res) {
 
 function coronaDataPerCountry(req, res) {
   let inputCountry = req.params.country;
+  var pre_query = new Date().getTime();
   let query = `
         WITH country(confirmed, recovered, deaths, date_checked) AS (
             SELECT confirmed, recovered, deaths, date_checked
@@ -54,6 +55,9 @@ function coronaDataPerCountry(req, res) {
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
+      var post_query = new Date().getTime();
+      var duration = (post_query - pre_query) / 1000;
+      console.log("corona A took: " +duration);
       res.json(rows);
     }
   });
@@ -77,6 +81,7 @@ function getMostRecentGlobalStatistics(req, res) {
 
 function getCoronaVsOtherCauses(req, res) {
   let inputCountry = req.params.country;
+  // var pre_query = new Date().getTime();
   let query = `
         WITH TotalCorona AS (
             SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, c.deaths as num
@@ -103,6 +108,9 @@ function getCoronaVsOtherCauses(req, res) {
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
+      // var post_query = new Date().getTime();
+      // var duration = (post_query - pre_query) / 1000;
+      // console.log("corona B took: " +duration);
       res.json(rows);
     }
   });
@@ -144,6 +152,7 @@ function getTimelineData(req, res) {
   let inputCountry = req.params.country;
   let inputCause1 = req.params.cause1;
   let inputCause2 = req.params.cause2;
+  // var pre_query = new Date().getTime();
 
   let query = `
         WITH cause1(year, cause, num_deaths) AS (
@@ -164,6 +173,9 @@ function getTimelineData(req, res) {
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
+      // var post_query = new Date().getTime();
+      // var duration = (post_query - pre_query) / 1000;
+      // console.log("timeline data took: " +duration);
       res.json(rows);
     }
   });
@@ -189,6 +201,7 @@ function getAvgNumDeaths(req, res) {
   let inputCountry = req.params.country;
   let inputCause1 = req.params.cause1;
   let inputCause2 = req.params.cause2;
+  // var pre_query = new Date().getTime();
   let query = `WITH cause1(cause, num_deaths, stdev) AS (
         SELECT cause, AVG(num_deaths), STDDEV(num_deaths)
         FROM cause_of_death_globally
@@ -207,6 +220,9 @@ function getAvgNumDeaths(req, res) {
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
+      // var post_query = new Date().getTime();
+      // var duration = (post_query - pre_query) / 1000;
+      // console.log("stats data took: " +duration);
       res.json(rows);
     }
   });
@@ -331,32 +347,27 @@ function getAvgLifeExpectancy(req, res) {
 function getCorrelation(req, res) {
   let country = req.params.country;
   let cause = req.params.cause;
+  var pre_query = new Date().getTime();
   var query = `
-        WITH TotalCorona AS (
-            SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, 2020 as year, SUM(c.deaths) as num
-            FROM coronavirus c 
-            WHERE c.country = "${country}"
-            GROUP BY (c.country)),
-        CauseByPopulation AS (
-            SELECT c.country, c.cause, c.year, c.num_deaths as num
-            FROM cause_of_death_globally c
-            WHERE c.country = "${country}"
-            AND c.num_deaths IS NOT NULL
-            AND c.num_deaths <> 0)
-        SELECT * 
-        FROM
-            (SELECT *
-            FROM CauseByPopulation
-            UNION
-            SELECT *
-            FROM TotalCorona) a
-        NATURAL JOIN population p
-        WHERE cause = "${cause}"
+        WITH CauseByPopulation AS (
+          SELECT c.country, c.cause, c.year, c.num_deaths as num
+          FROM cause_of_death_globally c
+          WHERE c.country = "${country}"
+          AND c.cause = "${cause}"
+          AND c.num_deaths IS NOT NULL
+          AND c.num_deaths <> 0)
+      SELECT * 
+      FROM
+      CauseByPopulation a
+      NATURAL JOIN population p;
     `;
   if (connection) {
     connection.query(query, function (err, rows, fields) {
       if (err) console.log(err);
       else {
+        var post_query = new Date().getTime();
+        var duration = (post_query - pre_query) / 1000;
+        console.log("correlation 1 data took: " +duration);
         res.json(rows);
       }
     });
@@ -366,27 +377,49 @@ function getCorrelation(req, res) {
 function getCorrelation2(req, res) {
     let country = req.params.country;
     let cause = req.params.cause;
+    var pre_query = new Date().getTime();
     var query = `
-        WITH CauseByPopulation AS (
-            SELECT c.country, c.cause, c.year, c.num_deaths as num
-            FROM cause_of_death_globally c
-            WHERE c.country = "${country}"
-            AND c.cause = "${cause}"
-            AND c.num_deaths IS NOT NULL
-            AND c.num_deaths <> 0),
-        AllCauses AS (
-            SELECT c.country, c.year, SUM(c.num_deaths) as all_deaths
-            FROM cause_of_death_globally c
-            WHERE c.country = "${country}"
-            GROUP BY c.country, c.year)
-        SELECT * 
-        FROM AllCauses a
-        NATURAL JOIN CauseByPopulation b
-      `;
+
+    WITH TotalCorona AS (
+        SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, 2020 as year, SUM(c.deaths) as num, SUM(c.deaths) as all_deaths
+        FROM coronavirus c
+        WHERE c.country = "${country}"
+        GROUP BY (c.country)),
+    CauseByPopulation AS (
+        SELECT c.country, c.cause, c.year, c.num_deaths as num
+        FROM cause_of_death_globally c
+        WHERE c.country = "${country}"
+        AND c.cause = "${cause}"
+        AND c.num_deaths IS NOT NULL
+        AND c.num_deaths <> 0),
+    AllCauses AS (
+        SELECT c.country, c.cause, c.year, SUM(num_deaths) as all_deaths
+        FROM 
+        cause_of_death_globally c
+        WHERE c.country = "${country}"
+        GROUP BY c.country, c.year),
+    Othercauses AS (
+      SELECT *
+      FROM AllCauses a
+      NATURAL JOIN CauseByPopulation b
+    )
+    SELECT * 
+    FROM
+      (SELECT * 
+        FROM Othercauses o
+        UNION
+        SELECT *
+        FROM TotalCorona t) x
+    `;
+
     if (connection) {
       connection.query(query, function (err, rows, fields) {
         if (err) console.log(err);
         else {
+          var post_query = new Date().getTime();
+          var duration = (post_query - pre_query) / 1000;
+          console.log("correlation data 2 took: " +duration);
+          console.log(rows);
           res.json(rows);
         }
       });
