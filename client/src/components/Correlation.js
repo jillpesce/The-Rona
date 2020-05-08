@@ -5,7 +5,6 @@ import CorrelationRow2 from './CorrelationRow2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/Correlation.css';
 import {Scatter} from 'react-chartjs-2';
-import Footer from './Footer';
 
 export default class Correlation extends React.Component {
 	constructor(props) {

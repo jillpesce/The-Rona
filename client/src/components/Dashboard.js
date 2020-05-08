@@ -81,7 +81,23 @@ export default class Dashboard extends React.Component {
                 </Button>
               </Card.Body>
             </Card>
+<<<<<<< Updated upstream
             <Card className="text-center" border="info">
+=======
+            <Card className="text-center" border="warning">
+              <Card.Header>Correlation</Card.Header>
+              <Card.Body>
+                <Card.Text>
+                  Compare population changes and causes of death for specific
+                  countries.
+                </Card.Text>
+                <Button variant="outline-primary">
+                  <Link to={"/LifeExpCalc"}>See page</Link>
+                </Button>
+              </Card.Body>
+            </Card>
+            <Card className="text-center" border="primary">
+>>>>>>> Stashed changes
               <Card.Header>Life Expectancy Calculator</Card.Header>
               <Card.Body>
                 <Card.Text>
