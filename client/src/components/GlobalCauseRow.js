@@ -10,7 +10,7 @@ export default class GlobalCauseRow extends React.Component {
 		return (
 			<div className="globalCauseResults">
 				<div className="cause">{this.props.cause}</div>
-				<div className="num_deaths">{this.props.num_deaths}</div>
+				<div className="num_deaths">{this.props.num_deaths.toLocaleString()}</div>
 			</div>
 		);
 	}

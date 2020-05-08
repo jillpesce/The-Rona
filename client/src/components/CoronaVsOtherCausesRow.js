@@ -10,7 +10,7 @@ export default class CoronaVsOtherCausesRow extends React.Component {
 		return (
 			<div className="coronavsotherResults">
 				<div className="cause">{this.props.cause}</div>
-				<div className="num">{this.props.num}</div>
+				<div className="num">{this.props.num.toLocaleString()}</div>
 			</div>
 		);
 	}

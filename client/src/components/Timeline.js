@@ -133,12 +133,19 @@ export default class Timeline extends React.Component {
 					console.log(err);
 				}).then(timelinePop => {
 					if (!timelinePop) return;
+					console.log(timelinePop);
+					if (timelinePop.length == 0) {
+						this.state.cache.set(this.state.selectedCountry + "pop", "Unavailable");
+						this.setState({
+							population: "Unavailable"
+						});
+					} else {
+						this.state.cache.set(this.state.selectedCountry + "pop", timelinePop[0].population);
 
-					this.state.cache.set(this.state.selectedCountry + "pop", timelinePop[0].population);
-
-					this.setState({
-						population: timelinePop[0].population
-					});
+						this.setState({
+							population: timelinePop[0].population
+						});
+					}
 
 				}, err => {
 					console.log(err);
