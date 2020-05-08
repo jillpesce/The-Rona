@@ -379,7 +379,6 @@ function getCorrelation2(req, res) {
     let cause = req.params.cause;
     var pre_query = new Date().getTime();
     var query = `
-    CREATE INDEX causes_country ON cause_of_death_globally(country)
 
     WITH TotalCorona AS (
         SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, 2020 as year, SUM(c.deaths) as num, SUM(c.deaths) as all_deaths
