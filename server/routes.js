@@ -155,19 +155,19 @@ function getTimelineData(req, res) {
   // var pre_query = new Date().getTime();
 
   let query = `
-        WITH cause1(year, cause, num_deaths) AS (
-            SELECT year, cause, num_deaths
-            FROM cause_of_death_globally
-            WHERE country = "${inputCountry}"
-            AND cause = "${inputCause1}"),
-            cause2(year, cause, num_deaths) AS (
-            SELECT year, cause, num_deaths
-            FROM cause_of_death_globally
-            WHERE country = "${inputCountry}"
-            AND cause = "${inputCause2}")
-            SELECT c1.year AS year, c1.num_deaths AS deaths_cause1, c2.num_deaths AS deaths_cause2
-            FROM cause1 c1 JOIN cause2 c2 ON c1.year = c2.year
-            ORDER BY c1.year;
+  WITH cause1(year, cause, num_deaths) AS (
+    SELECT year, cause, num_deaths
+    FROM cause_of_death_globally
+    WHERE country = "${inputCountry}"
+    AND cause = "${inputCause1}"),
+    cause2(year, cause, num_deaths) AS (
+    SELECT year, cause, num_deaths
+    FROM cause_of_death_globally
+    WHERE country = "${inputCountry}"
+    AND cause = "${inputCause2}")
+    SELECT c1.year AS year, c1.num_deaths AS deaths_cause1, c2.num_deaths AS deaths_cause2
+    FROM cause1 c1 JOIN cause2 c2 ON c1.year = c2.year
+    ORDER BY c1.year;
     `;
 
   connection.query(query, function (err, rows, fields) {
