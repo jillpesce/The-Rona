@@ -84,7 +84,7 @@ export default class Dashboard extends React.Component {
                   countries.
                 </Card.Text>
                 <Button variant="outline-primary">
-                  <Link to={"/LifeExpCalc"}>See page</Link>
+                  <Link to={"/Correlation"}>See page</Link>
                 </Button>
               </Card.Body>
             </Card>

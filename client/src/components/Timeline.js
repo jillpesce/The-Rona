@@ -110,16 +110,40 @@ export default class Timeline extends React.Component {
 		this.setState({
 			isSubmitted: true
 		});
-		if (this.state.cache.has(this.state.selectedCountry)) {
-			console.log(this.state.selectedCountry + "is in the cache");
-			let timelineDataList = this.state.cache.get(this.state.selectedCountry);
+		if (this.state.cache.has(this.state.selectedCountry + this.state.selectedCause1 + this.state.selectedCause2)) {
+			let timelineDataList = this.state.cache.get(this.state.selectedCountry + this.state.selectedCause1 + this.state.selectedCause2);
 			this.setGraph(timelineDataList);
 			let timelinePop = this.state.cache.get(this.state.selectedCountry + "pop");
 			this.setState({
 				population: timelinePop
 			});
+
 		} else {
-			console.log(this.state.selectedCountry + "is NOT in the cache");
+			if (this.state.cache.has(this.state.selectedCountry + "pop")) {
+				let timelinePop = this.state.cache.get(this.state.selectedCountry + "pop");
+				this.setState({
+					population: timelinePop
+				});
+			} else {
+				fetch(`http://localhost:8081/timeline/population/${encodeURIComponent(this.state.selectedCountry)}`, {
+					method: 'GET',
+				}).then(res => {
+					return res.json();
+				}, err => {
+					console.log(err);
+				}).then(timelinePop => {
+					if (!timelinePop) return;
+
+					this.state.cache.set(this.state.selectedCountry + "pop", timelinePop[0].population);
+
+					this.setState({
+						population: timelinePop[0].population
+					});
+
+				}, err => {
+					console.log(err);
+				});
+			}
 			fetch(`http://localhost:8081/timeline/${encodeURIComponent(this.state.selectedCountry)}
 		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
 				method: 'GET',
@@ -129,30 +153,13 @@ export default class Timeline extends React.Component {
 				console.log(err);
 			}).then(timelineDataList => {
 
-				this.state.cache.set(this.state.selectedCountry, timelineDataList);
+				this.state.cache.set(this.state.selectedCountry + this.state.selectedCause1 + this.state.selectedCause2, timelineDataList);
 
 				this.setGraph(timelineDataList);
 			}, err => {
 				console.log(err);
 			});
-			fetch(`http://localhost:8081/timeline/population/${encodeURIComponent(this.state.selectedCountry)}`, {
-				method: 'GET',
-			}).then(res => {
-				return res.json();
-			}, err => {
-				console.log(err);
-			}).then(timelinePop => {
-				if (!timelinePop) return;
 
-				this.state.cache.set(this.state.selectedCountry + "pop", timelinePop[0].population);
-
-				this.setState({
-					population: timelinePop[0].population
-				});
-
-			}, err => {
-				console.log(err);
-			});
 		}
 		//get avg num deaths
 		fetch(`http://localhost:8081/timeline/average/${encodeURIComponent(this.state.selectedCountry)}
