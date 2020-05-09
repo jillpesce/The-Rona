@@ -23,7 +23,7 @@
     "react-icons": "^3.10.0"
   },
   "scripts": {
-    "start": "concurrently \"cd server && npm run start \" \"cd client && npm start\" "
+    "start": "(cd client && npm start) & node server/index"
   },
   "engines": {
     "node": "10.16.x",
