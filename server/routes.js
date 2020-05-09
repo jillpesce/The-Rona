@@ -1,5 +1,7 @@
 var config = require("./db-config.js");
 var mysql = require("mysql");
+var express = require('express');
+var router = express.Router();
 
 config.connectionLimit = 10;
 
@@ -14,7 +16,44 @@ var connection = mysql.createConnection({
 /* -------------------------------------------------- */
 /* ------------------- Route Handlers --------------- */
 /* -------------------------------------------------- */
+router.get("/cvcountries", getCoronaVirusCountries);
 
+router.get("/gccountries", getGlobalCausesCountries);
+
+router.get("/gccauses", getGlobalCauses);
+
+router.get("/gyears", getGlobalCauseYears);
+router.get("/coronavirus/:country", coronaDataPerCountry);
+
+router.get("/globalstats", getMostRecentGlobalStatistics);
+
+router.get("/coronaVsOtherCauses/:country", getCoronaVsOtherCauses);
+
+router.get("/gccountries", getGlobalCausesCountries);
+
+router.get("/nyears", getNationalCauseYears);
+
+router.get("/globalcauses/:year", getTopGlobalCauses);
+
+router.get("/nationalcauses/:year", getTopNationalCauses);
+
+router.get("/coronavirus/:country", coronaDataPerCountry);
+
+router.get("/leccountries", getLifeExpCountries);
+
+router.get("/lecyears", getLifeExpYears);
+
+router.get("/lifeexpcalc/:country", getAvgLifeExpectancy);
+
+router.get("/timeline/:country/:cause1/:cause2", getTimelineData);
+
+router.get("/timeline/average/:country/:cause1/:cause2", getAvgNumDeaths);
+
+router.get("/timeline/population/:country", getTimelinePop);
+
+router.get("/gcorrelation/:country/:cause", getCorrelation);
+
+router.get('/gcorrelation2/:country/:cause', getCorrelation2);
 /* --------------------CoronaVirus Page Queries -------------------- */
 function getCoronaVirusCountries(req, res) {
   var query = `
@@ -444,5 +483,6 @@ module.exports = {
   getLifeExpYears: getLifeExpYears,
   getAvgLifeExpectancy: getAvgLifeExpectancy,
   getCorrelation: getCorrelation,
-  getCorrelation2: getCorrelation2
+  getCorrelation2: getCorrelation2,
+  router: router
 };

@@ -39,7 +39,7 @@ export default class GlobalCauses extends React.Component {
 	}
     
     componentDidMount() {
-		fetch("http://localhost:8081/gyears", 
+		fetch("/api/gyears", 
         {
             method: 'GET'
         }).then(res => {
@@ -68,7 +68,7 @@ export default class GlobalCauses extends React.Component {
 	}
     
     submit() {
-		fetch(`http://localhost:8081/globalcauses/${encodeURIComponent(this.state.selectedYear)}`, {
+		fetch(`api/globalcauses/${encodeURIComponent(this.state.selectedYear)}`, {
 			method: 'GET',
 		}).then(res => {
 			return res.json();

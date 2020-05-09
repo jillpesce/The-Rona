@@ -11,7 +11,7 @@ export default class SignIn extends React.Component {
   }
 
   handleLogin() {
-    window.open("http://localhost:8081/auth/google", "_self");
+    window.open("/api/auth/google", "_self");
   }
 
   render() {

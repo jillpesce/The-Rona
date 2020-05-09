@@ -44,7 +44,7 @@ export default class CoronaVirus extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:8081/cvcountries", {
+    fetch("/api/cvcountries", {
       method: "GET",
     })
       .then(
@@ -75,7 +75,7 @@ export default class CoronaVirus extends React.Component {
         }
       );
 
-    fetch("http://localhost:8081/globalstats", {
+    fetch("/api/globalstats", {
       method: "GET",
     })
       .then(
@@ -176,7 +176,7 @@ export default class CoronaVirus extends React.Component {
     } else {
       console.log(this.state.selectedCountry + "is NOT in the cache");
       fetch(
-        `http://localhost:8081/coronavirus/'${this.state.selectedCountry}'`,
+        `api/coronavirus/'${this.state.selectedCountry}'`,
         {
           method: "GET",
         }
@@ -263,7 +263,7 @@ export default class CoronaVirus extends React.Component {
     }
 
     fetch(
-      `http://localhost:8081/coronaVsOtherCauses/'${this.state.selectedCountry}'`,
+      `api/coronaVsOtherCauses/'${this.state.selectedCountry}'`,
       {
         method: "GET",
       }

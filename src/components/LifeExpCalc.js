@@ -27,7 +27,7 @@ export default class LifeExpCalc extends React.Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:8081/leccountries", {
+    fetch("/api/leccountries", {
       method: "GET",
     })
       .then(
@@ -96,7 +96,7 @@ export default class LifeExpCalc extends React.Component {
       });
     } else {
       fetch(
-        `http://localhost:8081/lifeexpcalc/'${this.state.selectedCountry}'`,
+        `api/lifeexpcalc/'${this.state.selectedCountry}'`,
         {
           method: "GET",
         }

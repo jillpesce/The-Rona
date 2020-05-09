@@ -12,84 +12,51 @@ import Correlation from "./Correlation";
 import Map from "./Map";
 
 const App = () => {
-  const [isAuthenticated, setAuthenticated] = useState(false);
-  useEffect(async () => {
-    try {
-      const res = await fetch("http://localhost:8081/auth/login/success", {
-        method: "GET",
-        credentials: "include",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-          "Access-Control-Allow-Credentials": true,
-        },
-      });
-
-      const data = await res.json();
-
-      if (data.isAuthenticated) {
-        setAuthenticated(true);
-      } else {
-        setAuthenticated(false);
-      }
-    } catch (err) {
-      console.error(err.message);
-    }
-  }, []);
 
   return (
     <div className="App" style={{position: 'absolute', minHeight: '100vh', width: '100%'}}>
       <Router>
         <Switch>
-          <Route
+        <Route
             exact
             path="/"
             render={(props) => (
-              <SignIn
+              <Dashboard
                 {...props}
-                isAuthenticated={isAuthenticated}
-                setAuthenticated={setAuthenticated}
               />
             )}
           />
           <PrivateRoute
-            isAuthenticated={isAuthenticated}
             exact
             path="/dashboard"
             component={Dashboard}
           />
           <PrivateRoute
-            isAuthenticated={isAuthenticated}
             exact
             path="/coronavirus"
             component={CoronaVirus}
           />
           <PrivateRoute
-            isAuthenticated={isAuthenticated}
             exact
             path="/timeline"
             component={Timeline}
           />
           <PrivateRoute
-            isAuthenticated={isAuthenticated}
             exact
             path="/GlobalCauses"
             component={GlobalCauses}
           />
           <PrivateRoute
-            isAuthenticated={isAuthenticated}
             exact
             path="/NationalCauses"
             component={NationalCauses}
           />
           <PrivateRoute
-            isAuthenticated={isAuthenticated}
             exact
             path="/Correlation"
             component={Correlation}
           />
           <PrivateRoute
-            isAuthenticated={isAuthenticated}
             exact
             path="/LifeExpCalc"
             component={LifeExpCalc}

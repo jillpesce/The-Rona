@@ -43,7 +43,7 @@ export default class Timeline extends React.Component {
 	}
 
 	componentDidMount() {
-		fetch("http://localhost:8081/gccountries",
+		fetch("/api/gccountries",
 			{
 				method: 'GET'
 			}).then(res => {
@@ -64,7 +64,7 @@ export default class Timeline extends React.Component {
 			}, err => {
 				console.log(err);
 			});
-		fetch("http://localhost:8081/gccauses",
+		fetch("/api/gccauses",
 			{
 				method: 'GET'
 			}).then(res => {
@@ -125,7 +125,7 @@ export default class Timeline extends React.Component {
 					population: timelinePop
 				});
 			} else {
-				fetch(`http://localhost:8081/timeline/population/${encodeURIComponent(this.state.selectedCountry)}`, {
+				fetch(`api/timeline/population/${encodeURIComponent(this.state.selectedCountry)}`, {
 					method: 'GET',
 				}).then(res => {
 					return res.json();
@@ -150,7 +150,7 @@ export default class Timeline extends React.Component {
 					console.log(err);
 				});
 			}
-			fetch(`http://localhost:8081/timeline/${encodeURIComponent(this.state.selectedCountry)}
+			fetch(`api/timeline/${encodeURIComponent(this.state.selectedCountry)}
 		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
 				method: 'GET',
 			}).then(res => {
@@ -168,7 +168,7 @@ export default class Timeline extends React.Component {
 
 		}
 		//get avg num deaths
-		fetch(`http://localhost:8081/timeline/average/${encodeURIComponent(this.state.selectedCountry)}
+		fetch(`api/timeline/average/${encodeURIComponent(this.state.selectedCountry)}
 		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
 			method: 'GET',
 		}).then(res => {

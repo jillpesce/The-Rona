@@ -29,7 +29,7 @@ export default class Correlation extends React.Component {
 	}
     
     componentDidMount() {
-		fetch("http://localhost:8081/gccountries",
+		fetch("/api/gccountries",
 			{
 				method: 'GET'
 			}).then(res => {
@@ -51,7 +51,7 @@ export default class Correlation extends React.Component {
 				console.log(err);
 			});
 
-			fetch("http://localhost:8081/gccauses",
+			fetch("/api/gccauses",
 			{
 				method: 'GET'
 			}).then(res => {
@@ -89,7 +89,7 @@ export default class Correlation extends React.Component {
 	}
     
     submit() {
-		fetch(`http://localhost:8081/gcorrelation/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
+		fetch(`api/gcorrelation/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
 			method: 'GET',
 		}).then(res => {
 			return res.json();
@@ -145,7 +145,7 @@ export default class Correlation extends React.Component {
 			console.log(err);
 		});
 
-		fetch(`http://localhost:8081/gcorrelation2/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
+		fetch(`api/gcorrelation2/${encodeURIComponent(this.state.selectedCountry)}/${encodeURIComponent(this.state.selectedCause)}`, {
 			method: 'GET',
 		}).then(res => {
 			return res.json();
