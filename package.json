@@ -24,5 +24,9 @@
   },
   "scripts": {
     "start": "concurrently \"cd server && npm run start \" \"cd client && npm start\" "
+  },
+  "engines": {
+    "node": "10.16.x",
+    "npm": "6.9.x"
   }
 }
