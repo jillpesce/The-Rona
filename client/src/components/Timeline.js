@@ -29,6 +29,7 @@ export default class Timeline extends React.Component {
 			population: 0,
 			countries: [],
 			causes: [],
+			cache: new Map(),
 			data: [],
 			labels: [],
 
@@ -109,74 +110,64 @@ export default class Timeline extends React.Component {
 		this.setState({
 			isSubmitted: true
 		});
-		fetch(`http://localhost:8081/timeline/${encodeURIComponent(this.state.selectedCountry)}
-		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
-			method: 'GET',
-		}).then(res => {
-			return res.json();
-		}, err => {
-			console.log(err);
-		}).then(timelineDataList => {
-			if (!timelineDataList) return;
-
-			let timelineDataDivs = timelineDataList.map((data, i) =>
-				<TimelineRow key={i} year={data.year}
-					deaths_cause1={data.deaths_cause1}
-					deaths_cause2={data.deaths_cause2} />
-			);
-
-			let labels = [];
-			let cause1 = [];
-			let cause2 = [];
-
-			timelineDataList.forEach(elem => {
-				labels.push(elem.year);
-				cause1.push(elem.deaths_cause1);
-				cause2.push(elem.deaths_cause2);
-			})
-
+		if (this.state.cache.has(this.state.selectedCountry + this.state.selectedCause1 + this.state.selectedCause2)) {
+			let timelineDataList = this.state.cache.get(this.state.selectedCountry + this.state.selectedCause1 + this.state.selectedCause2);
+			this.setGraph(timelineDataList);
+			let timelinePop = this.state.cache.get(this.state.selectedCountry + "pop");
 			this.setState({
-				submittedCountry: this.state.selectedCountry,
-				submittedCause1: this.state.selectedCause1,
-				submittedCause2: this.state.selectedCause2,
-				data: timelineDataDivs,
-				labels: labels,
-				datasets: [
-					{
-						label: `${this.state.selectedCause1}`,
-						fill: false,
-						lineTension: 0.5,
-						backgroundColor: (context) => {
-							let index = context.dataIndex;
-							let value = context.dataset.data[index];
-							return value > (this.state.cause1Avg + this.state.stdev1 * 2) ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
-							value < (this.state.cause1Avg - this.state.stdev1 * 2) ? 'rgba(255,0,0,0.5)' :  
-							'rgba(0,0,255,0.5)';},
-						borderColor: 'rgba(0,0,255,0.5)',
-						borderWidth: 1,
-						radius: 4,
-						data: cause1
-					},
-					{
-						label: `${this.state.selectedCause2}`,
-						fill: false,
-						lineTension: 0.5,
-						backgroundColor: (context) => {
-							let index = context.dataIndex;
-							let value = context.dataset.data[index];
-							return value > (this.state.cause2Avg + this.state.stdev2 * 2) ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
-							value < (this.state.cause2Avg - this.state.stdev2 * 2) ? 'rgba(255,0,0,0.5)' :  
-							'rgba(0,255,0,0.5)';},
-						borderColor: 'rgba(0,255,0,0.5)',
-						borderWidth: 1,
-						radius: 4,
-						data: cause2
-					}
-				]
+				population: timelinePop
 			});
-		}, err => {
-			console.log(err);
-		});
+
+		} else {
+			if (this.state.cache.has(this.state.selectedCountry + "pop")) {
+				let timelinePop = this.state.cache.get(this.state.selectedCountry + "pop");
+				this.setState({
+					population: timelinePop
+				});
+			} else {
+				fetch(`http://localhost:8081/timeline/population/${encodeURIComponent(this.state.selectedCountry)}`, {
+					method: 'GET',
+				}).then(res => {
+					return res.json();
+				}, err => {
+					console.log(err);
+				}).then(timelinePop => {
+					if (!timelinePop) return;
+					console.log(timelinePop);
+					if (timelinePop.length == 0) {
+						this.state.cache.set(this.state.selectedCountry + "pop", "Unavailable");
+						this.setState({
+							population: "Unavailable"
+						});
+					} else {
+						this.state.cache.set(this.state.selectedCountry + "pop", timelinePop[0].population);
+
+						this.setState({
+							population: timelinePop[0].population
+						});
+					}
+
+				}, err => {
+					console.log(err);
+				});
+			}
+			fetch(`http://localhost:8081/timeline/${encodeURIComponent(this.state.selectedCountry)}
+		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
+				method: 'GET',
+			}).then(res => {
+				return res.json();
+			}, err => {
+				console.log(err);
+			}).then(timelineDataList => {
+
+				this.state.cache.set(this.state.selectedCountry + this.state.selectedCause1 + this.state.selectedCause2, timelineDataList);
+
+				this.setGraph(timelineDataList);
+			}, err => {
+				console.log(err);
+			});
+
+		}
 		//get avg num deaths
 		fetch(`http://localhost:8081/timeline/average/${encodeURIComponent(this.state.selectedCountry)}
 		/${encodeURIComponent(this.state.selectedCause1)}/${encodeURIComponent(this.state.selectedCause2)}`, {
@@ -197,24 +188,69 @@ export default class Timeline extends React.Component {
 		}, err => {
 			console.log(err);
 		});
-		fetch(`http://localhost:8081/timeline/population/${encodeURIComponent(this.state.selectedCountry)}`, {
-			method: 'GET',
-		}).then(res => {
-			return res.json();
-		}, err => {
-			console.log(err);
-		}).then(timelinePop => {
-			if (!timelinePop) return;
-
-			this.setState({
-				population: timelinePop[0].population
-			});
-
-		}, err => {
-			console.log(err);
-		});
 	}
 
+	setGraph(timelineDataList) {
+		if (!timelineDataList) return;
+
+		let timelineDataDivs = timelineDataList.map((data, i) =>
+			<TimelineRow key={i} year={data.year}
+				deaths_cause1={data.deaths_cause1}
+				deaths_cause2={data.deaths_cause2} />
+		);
+
+		let labels = [];
+		let cause1 = [];
+		let cause2 = [];
+
+		timelineDataList.forEach(elem => {
+			labels.push(elem.year);
+			cause1.push(elem.deaths_cause1);
+			cause2.push(elem.deaths_cause2);
+		})
+
+		this.setState({
+			submittedCountry: this.state.selectedCountry,
+			submittedCause1: this.state.selectedCause1,
+			submittedCause2: this.state.selectedCause2,
+			data: timelineDataDivs,
+			labels: labels,
+			datasets: [
+				{
+					label: `${this.state.selectedCause1}`,
+					fill: false,
+					lineTension: 0.5,
+					backgroundColor: (context) => {
+						let index = context.dataIndex;
+						let value = context.dataset.data[index];
+						return value > (this.state.cause1Avg + this.state.stdev1 * 2) ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
+							value < (this.state.cause1Avg - this.state.stdev1 * 2) ? 'rgba(255,0,0,0.5)' :
+								'rgba(0,0,255,0.5)';
+					},
+					borderColor: 'rgba(0,0,255,0.5)',
+					borderWidth: 1,
+					radius: 4,
+					data: cause1
+				},
+				{
+					label: `${this.state.selectedCause2}`,
+					fill: false,
+					lineTension: 0.5,
+					backgroundColor: (context) => {
+						let index = context.dataIndex;
+						let value = context.dataset.data[index];
+						return value > (this.state.cause2Avg + this.state.stdev2 * 2) ? 'rgba(255,0,0,0.5)' :  // draw significant values in red
+							value < (this.state.cause2Avg - this.state.stdev2 * 2) ? 'rgba(255,0,0,0.5)' :
+								'rgba(0,255,0,0.5)';
+					},
+					borderColor: 'rgba(0,255,0,0.5)',
+					borderWidth: 1,
+					radius: 4,
+					data: cause2
+				}
+			]
+		});
+	}
 
 	render() {
 
@@ -238,9 +274,10 @@ export default class Timeline extends React.Component {
 									{this.state.causes}
 								</select>
 								<button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
-								<br/>
-								<br/>
-								<span>Results from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+								<br />
+								<br />
+								<span>Cause of Death Data from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+								<br /><span>Population Data from<a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank"> the United Nations Population Division, 2019</a></span>
 
 							</div>
 						</div>
@@ -294,21 +331,21 @@ export default class Timeline extends React.Component {
 						)}
 
 					</div>
-					<br/>
-					<br/>
+					<br />
+					<br />
 					{this.state.isSubmitted && (
-					<div className="jumbotron">
-						<div className="timelinedata-container">
-							<div className="timelinedata-header">
-								<div className="header"><strong>Year</strong></div>
-								<div className="header"><strong>Deaths by {this.state.selectedCause1}</strong></div>
-								<div className="header"><strong>Deaths by {this.state.selectedCause2}</strong></div>
+						<div className="jumbotron">
+							<div className="timelinedata-container">
+								<div className="timelinedata-header">
+									<div className="header"><strong>Year</strong></div>
+									<div className="header"><strong>Deaths by {this.state.selectedCause1}</strong></div>
+									<div className="header"><strong>Deaths by {this.state.selectedCause2}</strong></div>
+								</div>
+								<div className="results-container" id="results">
+									{this.state.data}
+								</div>
 							</div>
-							<div className="results-container" id="results">
-								{this.state.data}
-							</div>
-						</div>
-					</div>)}
+						</div>)}
 				</div>
 				<Footer></Footer>
 			</div>

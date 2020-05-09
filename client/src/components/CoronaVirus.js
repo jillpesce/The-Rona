@@ -15,6 +15,7 @@ export default class CoronaVirus extends React.Component {
     super(props);
 
     this.state = {
+      cache: new Map(),
       currentGlobalConfirmed: undefined,
       currentGlobalRecovered: undefined,
       currentGlobalDeaths: undefined,
@@ -37,20 +38,6 @@ export default class CoronaVirus extends React.Component {
         ],
       },
     };
-
-    // const stateTwo = {
-    // 	labels: ['January', 'February', 'March',
-    // 			 'April', 'May'],
-    // 	datasets: [
-    // 	  {
-    // 		label: 'Rainfall',
-    // 		backgroundColor: 'rgba(75,192,192,1)',
-    // 		borderColor: 'rgba(0,0,0,1)',
-    // 		borderWidth: 2,
-    // 		data: [65, 59, 80, 81, 56]
-    // 	  }
-    // 	]
-    //   }
 
     this.submitCountry = this.submitCountry.bind(this);
     this.handleChange = this.handleChange.bind(this);
@@ -122,90 +109,159 @@ export default class CoronaVirus extends React.Component {
   }
 
   submitCountry() {
-    console.log("submit button pressed");
-    fetch(`http://localhost:8081/coronavirus/'${this.state.selectedCountry}'`, {
-      method: "GET",
-    })
-      .then(
-        (res) => {
-          return res.json();
-        },
-        (err) => {
-          console.log(err);
+    if (this.state.cache.has(this.state.selectedCountry)) {
+      console.log(this.state.selectedCountry + "is in the cache");
+      let coronaDataList = this.state.cache.get(this.state.selectedCountry);
+
+      let coronaDataDivs = coronaDataList.map((data, i) => (
+        <CoronaVirusRow
+          key={i}
+          date={data.date_checked}
+          confirmed={data.confirmed}
+          recovered={data.recovered}
+          deaths={data.deaths}
+          confirmed_globally={data.confirmed_glob}
+          recovered_globally={data.recovered_glob}
+          deaths_globally={data.deaths_glob}
+        />
+      ));
+
+      let labels = [];
+      let countryCases = [];
+      let recoveredCases = [];
+      let deaths = [];
+      let globalCases = [];
+      coronaDataList.forEach((elem) => {
+        labels.push(elem.date_checked);
+        countryCases.push(elem.confirmed);
+        globalCases.push(elem.confirmed_glob);
+        recoveredCases.push(elem.recovered);
+        deaths.push(elem.deaths);
+      });
+
+      this.setState({
+        submittedCountry: this.state.selectedCountry,
+        data: coronaDataDivs,
+        labels: labels,
+        datasets: [
+          {
+            label: `Confirmed Cases`,
+            fill: false,
+            lineTension: 0.5,
+            backgroundColor: "rgba(0,0,255,0.5)",
+            borderColor: "rgba(0,0,255,0.5)",
+            borderWidth: 2,
+            data: countryCases,
+          },
+          {
+            label: `Recovered Cases`,
+            fill: false,
+            lineTension: 0.5,
+            backgroundColor: "rgba(0,255,0,0.5)",
+            borderColor: "rgba(0,255,0,0.5)",
+            borderWidth: 2,
+            data: recoveredCases,
+          },
+          {
+            label: "Death Cases",
+            fill: false,
+            lineTension: 0.5,
+            backgroundColor: "rgba(255,0,0,0.5)",
+            borderColor: "rgba(255,0,0,0.5)",
+            borderWidth: 2,
+            data: deaths,
+          },
+        ],
+      });
+    } else {
+      console.log(this.state.selectedCountry + "is NOT in the cache");
+      fetch(
+        `http://localhost:8081/coronavirus/'${this.state.selectedCountry}'`,
+        {
+          method: "GET",
         }
       )
-      .then(
-        (coronaDataList) => {
-          if (!coronaDataList) return;
+        .then(
+          (res) => {
+            return res.json();
+          },
+          (err) => {
+            console.log(err);
+          }
+        )
+        .then(
+          (coronaDataList) => {
+            if (!coronaDataList) return;
 
-          let coronaDataDivs = coronaDataList.map((data, i) => (
-            <CoronaVirusRow
-              key={i}
-              date={data.date_checked}
-              confirmed={data.confirmed}
-              recovered={data.recovered}
-              deaths={data.deaths}
-              confirmed_globally={data.confirmed_glob}
-              recovered_globally={data.recovered_glob}
-              deaths_globally={data.deaths_glob}
-            />
-          ));
+            let coronaDataDivs = coronaDataList.map((data, i) => (
+              <CoronaVirusRow
+                key={i}
+                date={data.date_checked}
+                confirmed={data.confirmed}
+                recovered={data.recovered}
+                deaths={data.deaths}
+                confirmed_globally={data.confirmed_glob}
+                recovered_globally={data.recovered_glob}
+                deaths_globally={data.deaths_glob}
+              />
+            ));
 
-          let labels = [];
-          let countryCases = [];
-          let recoveredCases = [];
-          let deaths = [];
-          let globalCases = [];
-          coronaDataList.forEach((elem) => {
-            labels.push(elem.date_checked);
-            countryCases.push(elem.confirmed);
-            globalCases.push(elem.confirmed_glob);
-            recoveredCases.push(elem.recovered);
-            deaths.push(elem.deaths);
-          });
+            this.state.cache.set(this.state.selectedCountry, coronaDataList);
 
-          this.setState({
-            submittedCountry: this.state.selectedCountry,
-            data: coronaDataDivs,
-            labels: labels,
-            datasets: [
-              {
-                label: `Confirmed Cases`,
-                fill: false,
-                lineTension: 0.5,
-                backgroundColor: "rgba(0,0,255,0.5)",
-                borderColor: "rgba(0,0,255,0.5)",
-                borderWidth: 2,
-                data: countryCases,
-              },
-              {
-                label: `Recovered Cases`,
-                fill: false,
-                lineTension: 0.5,
-                backgroundColor: "rgba(0,255,0,0.5)",
-                borderColor: "rgba(0,255,0,0.5)",
-                borderWidth: 2,
-                data: recoveredCases,
-              },
-              {
-                label: "Death Cases",
-                fill: false,
-                lineTension: 0.5,
-                backgroundColor: "rgba(255,0,0,0.5)",
-                borderColor: "rgba(255,0,0,0.5)",
-                borderWidth: 2,
-                data: deaths,
-              },
-            ],
-          });
-        },
-        (err) => {
-          console.log(err);
-        }
-      );
+            let labels = [];
+            let countryCases = [];
+            let recoveredCases = [];
+            let deaths = [];
+            let globalCases = [];
+            coronaDataList.forEach((elem) => {
+              labels.push(elem.date_checked);
+              countryCases.push(elem.confirmed);
+              globalCases.push(elem.confirmed_glob);
+              recoveredCases.push(elem.recovered);
+              deaths.push(elem.deaths);
+            });
 
-    //renderOtherCauses();
-    console.log("fetch 2");
+            this.setState({
+              submittedCountry: this.state.selectedCountry,
+              data: coronaDataDivs,
+              labels: labels,
+              datasets: [
+                {
+                  label: `Confirmed Cases`,
+                  fill: false,
+                  lineTension: 0.5,
+                  backgroundColor: "rgba(0,0,255,0.5)",
+                  borderColor: "rgba(0,0,255,0.5)",
+                  borderWidth: 2,
+                  data: countryCases,
+                },
+                {
+                  label: `Recovered Cases`,
+                  fill: false,
+                  lineTension: 0.5,
+                  backgroundColor: "rgba(0,255,0,0.5)",
+                  borderColor: "rgba(0,255,0,0.5)",
+                  borderWidth: 2,
+                  data: recoveredCases,
+                },
+                {
+                  label: "Death Cases",
+                  fill: false,
+                  lineTension: 0.5,
+                  backgroundColor: "rgba(255,0,0,0.5)",
+                  borderColor: "rgba(255,0,0,0.5)",
+                  borderWidth: 2,
+                  data: deaths,
+                },
+              ],
+            });
+          },
+          (err) => {
+            console.log(err);
+          }
+        );
+    }
+
     fetch(
       `http://localhost:8081/coronaVsOtherCauses/'${this.state.selectedCountry}'`,
       {
@@ -222,11 +278,8 @@ export default class CoronaVirus extends React.Component {
       )
       .then(
         (otherCausesList) => {
-          console.log("checkpoint 1");
           if (!otherCausesList) return;
 
-          console.log(otherCausesList);
-          console.log("checkpoint 2");
           let otherCausesDivs = otherCausesList.map((cause, i) => (
             <CoronaVsOtherCausesRow
               key={i}
@@ -319,6 +372,17 @@ export default class CoronaVirus extends React.Component {
                 </button>
               </div>
             </div>
+            <br />
+            <span>
+              Results from
+              <a
+                href="https://www.kaggle.com/imdevskp/corona-virus-report://data.worldbank.org/indicator/SP.POP.TOTL"
+                target="_blank"
+              >
+                {" "}
+                COVID-19 Dataset, 2019
+              </a>
+            </span>
           </div>
           <div>
             {this.state.selectedCountry !== "" && this.state.datasets && (

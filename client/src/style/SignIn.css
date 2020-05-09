@@ -13,5 +13,7 @@
   padding: 3rem;
   border-radius: 1rem;
   background-color: #f4f4f4;
+  align-content: center;
   box-shadow: 2px 2px 3px 3px rgba(0, 0, 0, 0.2);
+  align-items: center;
 }

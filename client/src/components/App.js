@@ -27,22 +27,18 @@ const App = () => {
 
       const data = await res.json();
 
-      console.log("res.data: " + data);
       if (data.isAuthenticated) {
         setAuthenticated(true);
-        console.log("set auth true");
       } else {
         setAuthenticated(false);
-        console.log("set auth false");
       }
     } catch (err) {
       console.error(err.message);
     }
   }, []);
 
-  console.log("App isauthenticated = " + isAuthenticated);
   return (
-    <div className="App">
+    <div className="App" style={{position: 'absolute', minHeight: '100vh', width: '100%'}}>
       <Router>
         <Switch>
           <Route
@@ -100,7 +96,7 @@ const App = () => {
           />
 
           <Route path='/Map' component={() => { 
-              window.location.href = 'https://public.tableau.com/views/CausesofDeath_15888742397720/GlobalCausesofDeath?:display_count=y&publish=yes&:origin=viz_share_link'; 
+              window.location.href = 'https://public.tableau.com/profile/selina.nie#!/vizhome/CausesofDeath_15888742397720/Sheet1'; 
               return null;
           }}/>
           />
