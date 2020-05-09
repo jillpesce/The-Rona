@@ -2,17 +2,6 @@
   "name": "cis450_project",
   "version": "1.0.0",
   "description": "CIS 450 project for Jill, Chloe, Selina, and Caroline",
-  "main": "index.js",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/caromurp/CIS450_Project.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/caromurp/CIS450_Project/issues"
-  },
-  "homepage": "https://github.com/caromurp/CIS450_Project#readme",
   "dependencies": {
     "chart.js": "^2.9.3",
     "concurrently": "^5.1.0",
@@ -31,7 +20,7 @@
     "react-dom": "^16.12.0",
     "react-dropdown": "^1.6.4",
     "react-router-dom": "^5.1.2",
-    "react-scripts": "3.3.0",
+    "react-scripts": "^3.4.0",
     "selenium-webdriver": "^4.0.0-alpha.5",
     "body-parser": "^1.19.0",
     "cookie-parser": "^1.4.3",
@@ -44,10 +33,22 @@
     "passport-google-oauth20": "^2.0.0"
   },
   "scripts": {
-    "start": "(cd client && npm start) & node server/index"
+    "start": "react-scripts start"
   },
   "engines": {
     "node": "10.16.x",
     "npm": "6.9.x"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
   }
 }

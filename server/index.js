@@ -31,7 +31,7 @@ connection.connect(function (err) {
 app.use(
   cors({
     credentials: true,
-    origin: "https://the-rona.herokuapp.com/",
+    origin: "https://the-rona.herokuapp.com",
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
   })
 );
