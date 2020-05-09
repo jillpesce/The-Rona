@@ -185,7 +185,8 @@ function getTimelinePop(req, res) {
   let query = `
         SELECT population
         FROM population
-        WHERE country = "${inputCountry}";
+        WHERE country = "${inputCountry}"
+        AND population <> 0;
     `;
 
   connection.query(query, function (err, rows, fields) {

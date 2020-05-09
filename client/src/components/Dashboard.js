@@ -10,7 +10,6 @@ import Footer from "./Footer";
 
 export default class Dashboard extends React.Component {
   constructor(props) {
-    // this.routeChangeCorona = this.routeChangeCorona.bind(this);
     super(props);
   }
 
@@ -85,7 +84,7 @@ export default class Dashboard extends React.Component {
                   Compare population changes and causes of death for specific
                   countries.
                 </Card.Text>
-
+                <Button variant="outline-primary">
                   <Link to={"/Correlation"}>See page</Link>
 
                 </Button>
