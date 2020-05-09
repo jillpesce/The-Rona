@@ -2,7 +2,7 @@
 var express = require('express');
 var router = express.Router();
 var passport = require('passport');
-var CLIENT_HOME_PAGE_URL = "http://localhost:3000";
+var CLIENT_HOME_PAGE_URL = "https://the-rona.herokuapp.com/";
 
 // auth with google
 router.get('/google', passport.authenticate('google', {
@@ -13,7 +13,7 @@ router.get('/google/callback', passport.authenticate('google', { failureRedirect
     function (req, res) {
         try {
             var token = req.user.token;
-            res.redirect("http://localhost:3000/");
+            res.redirect(CLIENT_HOME_PAGE_URL);
         } catch (err) {
             console.error(err.message);
         }

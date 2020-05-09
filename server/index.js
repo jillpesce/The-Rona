@@ -31,7 +31,7 @@ connection.connect(function (err) {
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000",
+    origin: "https://the-rona.herokuapp.com/",
     methods: "GET, HEAD, PUT, PATCH, POST, DELETE",
   })
 );
@@ -99,6 +99,6 @@ app.get("/gcorrelation/:country/:cause", routes.getCorrelation);
 
 app.get('/gcorrelation2/:country/:cause', routes.getCorrelation2);
 
-app.listen(process.env.PORT || 8081, () => {
+app.listen(8081, () => {
   console.log(`Server listening on PORT 8081`);
 });
