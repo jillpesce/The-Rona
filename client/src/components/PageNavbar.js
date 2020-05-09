@@ -72,12 +72,11 @@ export default class PageNavbar extends React.Component {
                 Global Causes
               </Link>
               <Link className="header-link" to={"/Correlation"}>
-                Population vs. Cause of Death
+                Correlation
               </Link>
               <Link className="header-link" to={"/LifeExpCalc"}>
                 Life Expectancy Calculator
               </Link>
-
               <Link className="header-link" to={"/Map"}>
                 Map
               </Link>

@@ -32,7 +32,7 @@ function getCoronaVirusCountries(req, res) {
 
 function coronaDataPerCountry(req, res) {
   let inputCountry = req.params.country;
-  var pre_query = new Date().getTime();
+
   let query = `
         WITH country(confirmed, recovered, deaths, date_checked) AS (
             SELECT confirmed, recovered, deaths, date_checked
@@ -55,9 +55,6 @@ function coronaDataPerCountry(req, res) {
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
-      var post_query = new Date().getTime();
-      var duration = (post_query - pre_query) / 1000;
-      console.log("corona A took: " +duration);
       res.json(rows);
     }
   });
@@ -81,7 +78,7 @@ function getMostRecentGlobalStatistics(req, res) {
 
 function getCoronaVsOtherCauses(req, res) {
   let inputCountry = req.params.country;
-  // var pre_query = new Date().getTime();
+
   let query = `
         WITH TotalCorona AS (
             SELECT c.country, 'COVID-19' COLLATE utf8_general_ci as cause, c.deaths as num
@@ -108,9 +105,11 @@ function getCoronaVsOtherCauses(req, res) {
   connection.query(query, function (err, rows, fields) {
     if (err) console.log(err);
     else {
-      // var post_query = new Date().getTime();
-      // var duration = (post_query - pre_query) / 1000;
-      // console.log("corona B took: " +duration);
+
+      var post_query = new Date().getTime();
+      var duration = (post_query - pre_query) / 1000;
+      console.log("time taken: " + duration)
+
       res.json(rows);
     }
   });

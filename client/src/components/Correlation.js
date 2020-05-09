@@ -7,6 +7,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/Correlation.css';
 import { Scatter } from 'react-chartjs-2';
 
+
 export default class Correlation extends React.Component {
 	constructor(props) {
 		super(props);
