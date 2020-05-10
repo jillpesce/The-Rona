@@ -129,7 +129,7 @@ export default class GlobalCauses extends React.Component {
 			            <button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
 						<br/>
 								<br/>
-								<span>Results from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+								<span>Results from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"  rel="noopener noreferrer"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
 
 			          </div>
 			        </div>

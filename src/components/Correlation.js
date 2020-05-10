@@ -126,7 +126,7 @@ export default class Correlation extends React.Component {
 			if (!correlationList2) return;
 			let CorrelationDivs2 = [];
 
-			if (this.state.submittedCause == "COVID-19") {
+			if (this.state.submittedCause === "COVID-19") {
 				var i = correlationList2.length - 1;
 				var data = correlationList2[i];
 				CorrelationDivs2.push(<CorrelationRow2 key={i}
@@ -256,8 +256,8 @@ export default class Correlation extends React.Component {
 								<button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
 								<br />
 								<br />
-								<span>Cause of Death Data from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
-								<br /><span>Population Data from<a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank"> the United Nations Population Division, 2019</a></span>
+								<span>Cause of Death Data from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank" rel="noopener noreferrer"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+								<br /><span>Population Data from<a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank" rel="noopener noreferrer"> the United Nations Population Division, 2019</a></span>
 
 							</div>
 						</div>

@@ -4,9 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../style/Footer.css';
 
 export default class PageNavbar extends React.Component {
-	constructor(props) {
-		super(props);
-	}
 
 	render() {
 		return (

@@ -188,6 +188,7 @@ export default class LifeExpCalc extends React.Component {
               <a
                 href="https://ourworldindata.org/life-expectancy"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {" "}
                 Our World in Data, 2020

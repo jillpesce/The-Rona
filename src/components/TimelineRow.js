@@ -2,9 +2,6 @@ import React from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default class TimelineRow extends React.Component {
-	constructor(props) {
-		super(props);
-	}
 
 	render() {
 		return (

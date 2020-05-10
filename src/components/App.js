@@ -1,15 +1,14 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import CoronaVirus from "./CoronaVirus";
 import PrivateRoute from "./PrivateRoute";
 import Timeline from "./Timeline";
 import Dashboard from "./Dashboard";
-import SignIn from "./SignIn";
+//import SignIn from "./SignIn";
 import GlobalCauses from "./GlobalCauses";
 import NationalCauses from "./NationalCauses";
 import LifeExpCalc from "./LifeExpCalc";
 import Correlation from "./Correlation";
-import Map from "./Map";
 
 const App = () => {
 

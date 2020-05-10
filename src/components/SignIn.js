@@ -1,7 +1,6 @@
 import React from "react";
 import "../style/SignIn.css";
 import "bootstrap/dist/css/bootstrap.min.css";
-import PageNavbar from "./PageNavbar";
 import Button from "react-bootstrap/Button";
 import { Redirect } from "react-router-dom";
 

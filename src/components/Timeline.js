@@ -133,7 +133,7 @@ export default class Timeline extends React.Component {
 					console.log(err);
 				}).then(timelinePop => {
 					if (!timelinePop) return;
-					if (timelinePop.length == 0) {
+					if (timelinePop.length === 0) {
 						this.state.cache.set(this.state.selectedCountry + "pop", "Unavailable");
 						this.setState({
 							population: "Unavailable"
@@ -275,8 +275,8 @@ export default class Timeline extends React.Component {
 								<button className="submit-btn" id="submitBtn" onClick={this.submit}>Submit</button>
 								<br />
 								<br />
-								<span>Cause of Death Data from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
-								<br /><span>Population Data from<a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank"> the United Nations Population Division, 2019</a></span>
+								<span>Cause of Death Data from<a href="https://ourworldindata.org/grapher/share-of-deaths-by-cause" target="_blank" rel="noopener noreferrer"> the Institute for Health Metrics and Evaluation (IHME), 2018</a></span>
+								<br /><span>Population Data from<a href="https://data.worldbank.org/indicator/SP.POP.TOTL" target="_blank" rel="noopener noreferrer"> the United Nations Population Division, 2019</a></span>
 
 							</div>
 						</div>

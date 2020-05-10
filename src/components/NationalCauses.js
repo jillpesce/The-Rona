@@ -142,7 +142,7 @@ export default class NationalCauses extends React.Component {
 
 						<br/>
 						<br/>
-						<span>Results from<a href="https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu" target="_blank"> the Centers for Disease Control and Prevention, 2019</a></span>
+						<span>Results from<a href="https://data.cdc.gov/NCHS/NCHS-Leading-Causes-of-Death-United-States/bi63-dtpu" target="_blank"  rel="noopener noreferrer"> the Centers for Disease Control and Prevention, 2019</a></span>
 
 			          </div>
 			        </div>

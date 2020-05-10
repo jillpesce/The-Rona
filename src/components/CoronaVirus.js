@@ -378,6 +378,7 @@ export default class CoronaVirus extends React.Component {
               <a
                 href="https://www.kaggle.com/imdevskp/corona-virus-report://data.worldbank.org/indicator/SP.POP.TOTL"
                 target="_blank"
+                rel="noopener noreferrer"
               >
                 {" "}
                 COVID-19 Dataset, 2019

@@ -1,9 +1,6 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Link } from "react-router-dom";
-import CoronaVirus from "./CoronaVirus";
-import GlobalCauses from "./GlobalCauses";
-import NationalCauses from "./NationalCauses";
 import "../style/PageNavbar.css";
 
 export default class PageNavbar extends React.Component {
