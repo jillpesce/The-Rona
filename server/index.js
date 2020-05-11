@@ -3,14 +3,14 @@ var mysql = require("mysql");
 var bodyParser = require("body-parser");
 var cookieSession = require("cookie-session");
 var cookieParser = require("cookie-parser"); // parse cookie header
-var passportSetup = require("./passport-setup");
-var passport = require("passport");
+//var passportSetup = require("./passport-setup");
+//var passport = require("passport");
 const keys = require("./keys");
 var cors = require("cors");
 // var authRoutes = require("./auth-routes");
-var config = require("./db-config.js");
+//var config = require("./db-config.js");
 var app = express();
-var routes = require("./routes");
+//var routes = require("./routes");
 
 var connection = mysql.createConnection({
   host: "mysqldb.csugpczkhpw3.us-east-1.rds.amazonaws.com",
@@ -55,8 +55,8 @@ app.use(cookieParser());
 
 // set up routes
 // app.use("/auth", authRoutes);
-
-app.use("/api", routes.router);
+// const { createProxyMiddleware } = require("http-proxy-middleware");
+// app.use('/api', createProxyMiddleware({ target: 'http://localhost:8081', changeOrigin: true }));
 
 /* ---------------------------------------------------------------- */
 /* ------------------- Route handler registration ----------------- */
